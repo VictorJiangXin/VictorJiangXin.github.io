@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>python3安装pymssql | 且听风吟 | 充实生活，快乐coding</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="python,pymssql">
+    <meta name="description" content="提要由于在做项目中，需要通过python操作SQL Server数据库，在查看相关资料后，发现可以使用pymssql包，对数据库进行操作。本人使用的Python版本为3.5，查阅多种资料，都是推荐使用 pip install pymssql 但是，每次安装的时候，都出现错误，后来又尝试直接从pypi.org网站下载pymssql的包进行安装，进入相关包的路径后，输入python setup.py">
+<meta name="keywords" content="python,pymssql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python3安装pymssql">
+<meta property="og:url" content="http://victorjiangxin.github.io/python3-install-pymssql/index.html">
+<meta property="og:site_name" content="且听风吟">
+<meta property="og:description" content="提要由于在做项目中，需要通过python操作SQL Server数据库，在查看相关资料后，发现可以使用pymssql包，对数据库进行操作。本人使用的Python版本为3.5，查阅多种资料，都是推荐使用 pip install pymssql 但是，每次安装的时候，都出现错误，后来又尝试直接从pypi.org网站下载pymssql的包进行安装，进入相关包的路径后，输入python setup.py">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-15T12:32:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python3安装pymssql">
+<meta name="twitter:description" content="提要由于在做项目中，需要通过python操作SQL Server数据库，在查看相关资料后，发现可以使用pymssql包，对数据库进行操作。本人使用的Python版本为3.5，查阅多种资料，都是推荐使用 pip install pymssql 但是，每次安装的时候，都出现错误，后来又尝试直接从pypi.org网站下载pymssql的包进行安装，进入相关包的路径后，输入python setup.py">
+    
+        <link rel="alternate" type="application/atom+xml" title="且听风吟" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/panda.jpg">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/panda.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/jiangxin.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">JiangXin</h5>
+          <a href="mailto:jiangxin.hust@foxmail.com" title="jiangxin.hust@foxmail.com" class="mail">jiangxin.hust@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                存档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                种类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/VictorJiangXin" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">python3安装pymssql</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">python3安装pymssql</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-07-22T10:57:46.000Z" itemprop="datePublished" class="page-time">
+  2018-07-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/笔记/">笔记</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#提要"><span class="post-toc-number">1.</span> <span class="post-toc-text">提要</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#解决"><span class="post-toc-number">2.</span> <span class="post-toc-text">解决</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="artical-python3-install-pymssql" class="post-article article-type-artical fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">python3安装pymssql</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-07-22 18:57:46" datetime="2018-07-22T10:57:46.000Z" itemprop="datePublished">2018-07-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/笔记/">笔记</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="提要"><a href="#提要" class="headerlink" title="提要"></a>提要</h1><p>由于在做项目中，需要通过python操作SQL Server数据库，在查看相关资料后，发现可以使用pymssql包，对数据库进行操作。本人使用的Python版本为3.5，查阅多种资料，都是推荐使用 <code>pip install pymssql</code> 但是，每次安装的时候，都出现错误，后来又尝试直接从pypi.org网站下载pymssql的包进行安装，进入相关包的路径后，输入<code>python setup.py install</code>但是仍旧是一堆错误。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>在查看各种博客后，最终找到了解决方法。在微软的帖子里 <a href="https://docs.microsoft.com/en-us/sql/connect/python/pymssql/step-1-configure-development-environment-for-pymssql-python-development?view=sql-server-2017]" target="_blank" rel="noopener">微软的SQL帮助</a>核心原因是，pip安装的程序需要再专门的网站里下载，即要下载对应版本的数据。<a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pymssql" target="_blank" rel="noopener">下载地址</a> 我是python3.5,64位，因此下载了 <code>pymssql‑2.1.4.dev5‑cp35‑cp35m‑win_amd64.whl</code> 然后进入下载的文件夹，运行指令 <code>pip install pymssql‑2.1.4.dev5‑cp35‑cp35m‑win_amd64.whl</code>从而成功安装。问题顺利解决 </p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-08-15T12:32:30.000Z" itemprop="dateUpdated">2018-08-15 20:32:30</time>
+</span><br>
+
+
+        
+        勿忘初心，方得始终
+        
+    </div>
+    
+    <footer>
+        <a href="http://victorjiangxin.github.io">
+            <img src="/img/jiangxin.jpg" alt="JiangXin">
+            JiangXin
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pymssql/">pymssql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/python3-install-pymssql/&title=《python3安装pymssql》 — 且听风吟&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/python3-install-pymssql/&title=《python3安装pymssql》 — 且听风吟&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/python3-install-pymssql/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《python3安装pymssql》 — 且听风吟&url=http://victorjiangxin.github.io/python3-install-pymssql/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/python3-install-pymssql/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/etheStudy/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">通过geth Json-Rpc接口遇到的坑</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+    <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			id: 'python3安装pymssql',
+            owner: 'VictorJiangXin',
+            repo: 'VictorJiangXin.github.io',
+            oauth: {
+                client_id: '8e74c41139bddec275e5',
+                client_secret: '227f869423c5e8e3cfa929127ff09020e3c9a3f5',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>JiangXin &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/python3-install-pymssql/&title=《python3安装pymssql》 — 且听风吟&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/python3-install-pymssql/&title=《python3安装pymssql》 — 且听风吟&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/python3-install-pymssql/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《python3安装pymssql》 — 且听风吟&url=http://victorjiangxin.github.io/python3-install-pymssql/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/python3-install-pymssql/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACOklEQVR42u3aQW6kQAwF0Nz/0ow0q1kE+v8yiYbi1arVQVCPSG677K+veB1/V/L98c+6vubs89mzblgYGBiPZRyX65pxvZXknvk3Z/fBwMB4DyPfXBLxkuDbXv9hzxgYGBiXQfD6+rUEEQMDA2MScJNAfJ3GtUEZAwMDoy04k8DaHpzlz72hFsfAwHggo20M/ObnH+xvYGBgPIRxlOve7mGeVn64PwYGxtaM/GhsrTRtW57tX6O5DwwMjIcz2oDYDlVcB+tJUMbAwHgzI39k2zBoecmeMTAw3sNoxyCKrHMpjNZjGRgYGC9gFKEtDqaTQbGkVP7m1BADA2NTxvymbRKZH6gtJpEYGBibMvJULw+18wGOdkANAwNjb0ay9bxVkJe+a+2KD2UwBgbGdoz8WL9tbRYNyMFBGwYGxhsYk5CXBNMJaTR+gYGBsR1j3kpsBzKSJkHdWsDAwHgBYzJU0bYnJ4nj6X4wMDA2ZczL1/xwbS2JjAI0BgbG1ow6/ZrE9bhgTl4rBgbGexi5NR/PakvZttl5+n/AwMDYmpE/vk0Ek5ey9sRvilgMDIxNGXUWGY9BrB3J5ann6NcDAwPjUYyjXHcdjeWFaxSsMTAwtmasjWfVSVt8PJfcs30KBgbGHow2yLbIyVBF8WowMDBewJgf9/8EqSiDMTAwMJYO4yYlbv0DgIGBgbE0cjo5wkvC+s0BFwMD479nTAa28hbm2gBZ3YnFwMDYjjEpINe6DW1DNH8FGBgY2zH+AFm6api4Z3+3AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '悄悄的我走了';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '正如我轻轻的来!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

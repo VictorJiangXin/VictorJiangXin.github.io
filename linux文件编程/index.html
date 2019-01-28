@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>linux文件编程 | 且听风吟 | 充实生活，快乐coding</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="linux,文件操作">
+    <meta name="description" content="概述Linux系统讲所有设备都当作文件来处理，因此Linux文件编程极其重要！linux文件编程设计到文件的读、写定位等各种操作。其中对文件的操作都只能由内核态完成，用户态想要访问文件只能通过系统调用。Linux文件编程中，最重要的一个概念便是文件描述符fd，所有文件的操作都通过文件描述符进行，每个文件对应一个文件描述符。打开现存文件或新建文件时，内核会返回一个文件描述符，读写文件也需要使用文件描">
+<meta name="keywords" content="linux,文件操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux文件编程">
+<meta property="og:url" content="http://victorjiangxin.github.io/linux文件编程/index.html">
+<meta property="og:site_name" content="且听风吟">
+<meta property="og:description" content="概述Linux系统讲所有设备都当作文件来处理，因此Linux文件编程极其重要！linux文件编程设计到文件的读、写定位等各种操作。其中对文件的操作都只能由内核态完成，用户态想要访问文件只能通过系统调用。Linux文件编程中，最重要的一个概念便是文件描述符fd，所有文件的操作都通过文件描述符进行，每个文件对应一个文件描述符。打开现存文件或新建文件时，内核会返回一个文件描述符，读写文件也需要使用文件描">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-15T12:32:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux文件编程">
+<meta name="twitter:description" content="概述Linux系统讲所有设备都当作文件来处理，因此Linux文件编程极其重要！linux文件编程设计到文件的读、写定位等各种操作。其中对文件的操作都只能由内核态完成，用户态想要访问文件只能通过系统调用。Linux文件编程中，最重要的一个概念便是文件描述符fd，所有文件的操作都通过文件描述符进行，每个文件对应一个文件描述符。打开现存文件或新建文件时，内核会返回一个文件描述符，读写文件也需要使用文件描">
+    
+        <link rel="alternate" type="application/atom+xml" title="且听风吟" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/panda.jpg">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/panda.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/jiangxin.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">JiangXin</h5>
+          <a href="mailto:jiangxin.hust@foxmail.com" title="jiangxin.hust@foxmail.com" class="mail">jiangxin.hust@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                存档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                种类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/VictorJiangXin" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">linux文件编程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">linux文件编程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-25T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2018-04-26
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/linux学习/">linux学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.</span> <span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#需要添加的函数库"><span class="post-toc-number">2.</span> <span class="post-toc-text">需要添加的函数库</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件操作"><span class="post-toc-number">3.</span> <span class="post-toc-text">文件操作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#open-打开文件"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">open 打开文件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#create-创建文件"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">create 创建文件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#read-读数据"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">read 读数据</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#write-写数据"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">write 写数据</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#lseek-定位文件指针"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">lseek 定位文件指针</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#close-关闭文件"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">close 关闭文件</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#处理系统调用中的错误"><span class="post-toc-number">4.</span> <span class="post-toc-text">处理系统调用中的错误</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#errno"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">errno</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#perror"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">perror</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="artical-linux文件编程" class="post-article article-type-artical fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">linux文件编程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-26 00:00:00" datetime="2018-04-25T16:00:00.000Z" itemprop="datePublished">2018-04-26</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/linux学习/">linux学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Linux系统讲所有设备都当作文件来处理，因此Linux文件编程极其重要！<br>linux文件编程设计到文件的读、写定位等各种操作。其中对文件的操作都只能由内核态完成，用户态想要访问文件只能通过系统调用。<br>Linux文件编程中，最重要的一个概念便是文件描述符fd，所有文件的操作都通过文件描述符进行，每个文件对应一个文件描述符。<br>打开现存文件或新建文件时，内核会返回一个文件描述符，读写文件也需要使用文件描述符。  </p>
+<h1 id="需要添加的函数库"><a href="#需要添加的函数库" class="headerlink" title="需要添加的函数库"></a>需要添加的函数库</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;fcntl.h&gt;	//文件控制选项头文件</span><br><span class="line">#include &lt;unistd.h&gt; //针对系统调用封装</span><br><span class="line">#include &lt;sys/type.h&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h1><h2 id="open-打开文件"><a href="#open-打开文件" class="headerlink" title="open 打开文件"></a>open 打开文件</h2><p>函数原型： <code>int open(char *name, int how)</code><br>功能： 打开一个文件</p>
+<ul>
+<li>name: 文件名</li>
+<li>how: 文件操作限制<ul>
+<li>O_RDONLY 只读</li>
+<li>O_WRONLY 只写</li>
+<li>O_RDWR 读写  </li>
+</ul>
+</li>
+<li>return <ul>
+<li>-1: 打开失败</li>
+<li>非零: 对应的文件描述符  </li>
+</ul>
+</li>
+</ul>
+<h2 id="create-创建文件"><a href="#create-创建文件" class="headerlink" title="create 创建文件"></a>create 创建文件</h2><p>函数原型： <code>int fd = create(char *filename, mode_t mode)</code><br>功能： 创建一个文件，如果源文件存在，则讲该文件清空</p>
+<ul>
+<li>filename： 文件名</li>
+<li>mode: 访问模式<ul>
+<li>COPYMODE</li>
+</ul>
+</li>
+<li>return<ul>
+<li>-1: 打开失败</li>
+<li>非零: 成功创建</li>
+</ul>
+</li>
+</ul>
+<h2 id="read-读数据"><a href="#read-读数据" class="headerlink" title="read 读数据"></a>read 读数据</h2><p>函数原型: <code>ssize_t read(int fd, void *buf, size_t qty)</code><br>功能： 读取qty长度的数据到缓存buf中</p>
+<ul>
+<li>fd: 所读文件的文件描述符</li>
+<li>buf: 缓存</li>
+<li>qty: 读取文件的长度</li>
+<li>return:<ul>
+<li>-1: 读取错误</li>
+<li>非零: 读取的长度</li>
+</ul>
+</li>
+</ul>
+<h2 id="write-写数据"><a href="#write-写数据" class="headerlink" title="write 写数据"></a>write 写数据</h2><p>函数原型： <code>ssize_t write(int fd, void *buf, size_t amt)</code><br>功能： 将buf中数据写入文件中</p>
+<ul>
+<li>fd: 所写文件的文件描述符</li>
+<li>buf: 缓存</li>
+<li>amt: 写进文件的长度</li>
+<li>return:<ul>
+<li>-1: 读取错误</li>
+<li>非零: 写入的长度</li>
+</ul>
+</li>
+</ul>
+<h2 id="lseek-定位文件指针"><a href="#lseek-定位文件指针" class="headerlink" title="lseek 定位文件指针"></a>lseek 定位文件指针</h2><p>函数原型： <code>off_t lseek(int fd, off_t dist, int base)</code><br>功能： 将文件指针定位到制定位置</p>
+<ul>
+<li>fd: 操作的文件描述符</li>
+<li>dist: 相对基位置的偏移量</li>
+<li>base: 基位置<ul>
+<li>SEEK_SET 文件的开始</li>
+<li>SEEK_CUR 当前位置</li>
+<li>SEEK_END 文件结尾</li>
+</ul>
+</li>
+<li>return<ul>
+<li>-1: 错误</li>
+<li>其他： 指针变化前的位置</li>
+</ul>
+</li>
+</ul>
+<h2 id="close-关闭文件"><a href="#close-关闭文件" class="headerlink" title="close 关闭文件"></a>close 关闭文件</h2><p>函数原型： <code>int close(int fd)</code><br>功能： 关闭文件</p>
+<ul>
+<li>fd: 需要关闭的文件</li>
+<li>return<ul>
+<li>-1: 错误</li>
+<li>0: 关闭正确</li>
+</ul>
+</li>
+</ul>
+<h1 id="处理系统调用中的错误"><a href="#处理系统调用中的错误" class="headerlink" title="处理系统调用中的错误"></a>处理系统调用中的错误</h1><h2 id="errno"><a href="#errno" class="headerlink" title="errno"></a>errno</h2><p>内核通过全局变量来指定系统调用的类型，每个程序可以访问到该变量。一般不用它判断系统调用错误。</p>
+<h2 id="perror"><a href="#perror" class="headerlink" title="perror"></a>perror</h2><p>使用 <code>perror(string)</code><br>系统会自己查找调用错误的类型，并且将错误信息打印。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-08-15T12:32:30.000Z" itemprop="dateUpdated">2018-08-15 20:32:30</time>
+</span><br>
+
+
+        
+        勿忘初心，方得始终
+        
+    </div>
+    
+    <footer>
+        <a href="http://victorjiangxin.github.io">
+            <img src="/img/jiangxin.jpg" alt="JiangXin">
+            JiangXin
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件操作/">文件操作</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/linux文件编程/&title=《linux文件编程》 — 且听风吟&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/linux文件编程/&title=《linux文件编程》 — 且听风吟&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/linux文件编程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux文件编程》 — 且听风吟&url=http://victorjiangxin.github.io/linux文件编程/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/linux文件编程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/HunterCatchRabbits/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">HunterCatchRabbits</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/linux获取时间及Socket编程/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">linux获取时间及Socket编程</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+    <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			id: 'linux文件编程',
+            owner: 'VictorJiangXin',
+            repo: 'VictorJiangXin.github.io',
+            oauth: {
+                client_id: '8e74c41139bddec275e5',
+                client_secret: '227f869423c5e8e3cfa929127ff09020e3c9a3f5',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>JiangXin &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/linux文件编程/&title=《linux文件编程》 — 且听风吟&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/linux文件编程/&title=《linux文件编程》 — 且听风吟&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/linux文件编程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux文件编程》 — 且听风吟&url=http://victorjiangxin.github.io/linux文件编程/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/linux文件编程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKUlEQVR42u3aQY7CMAwFUO5/aWYzmxGC/u/ASCQvKwS0zcvCdWLfbvG4P4zHXx//2d4tuXZpYGBgfC3j/nK0jISXLEQ+NwwMjHMYySSe/X8WNFvSxZwxMDAwnjzsdYBOYPl9MDAwMNqAOwuXF+nd/783MDAwvoqxEkDzyeX3+eBeHAMD4wsZ+an7/3/+SH0DAwPjqxj3cuSBsg2ps/n8XouBgbE1Iw9wnyhhtsnlRVEBAwNja0YSIldKBa+nld8zWTgMDIz9GG3SNitA5ouSX/vnGwwMjAMY791YfuIE7OLFgIGBsTWjbTldD7h5o1gLw8DAOIExC3n5tGatFfURGwYGxnaM5Misnej6sV1brsDAwNibMUvg8uSvTT2XkksMDIwDGG0imDdVzBLQ/GWAgYFxAqNIv2Je/pg2fLf3x8DA2IORN3LlpcpZCSF5VrSJxcDA2IjRHuW3YXGlSFAEbgwMjAMYK8dnScBtm8bqpcfAwNiakaRubTHyvXnrsHMEAwNjO0YtLg/CZkWFPKHEwMA4k5FgZingJwoSGBgYpzFWHjZj38rxdGkwMDA2ZdzL0ZYW8oSvTQSjGiwGBsYWjJUw17acrm968+COgYGxH6MtBszaMt4bcOvKBgYGxhaMJL3LQ3De/tW+AS5qsBgYGBijQkKLHG5TMTAwMEafV9rL2u0xBgbGCYw81UsOv2YtqnnAxcDAOI3xrqaKNrwmAbrdWmNgYGzH+AGoUbJQ6f8NvQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '悄悄的我走了';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '正如我轻轻的来!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>linux获取时间及Socket编程 | 且听风吟 | 充实生活，快乐coding</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="linux,socket">
+    <meta name="description" content="如何获取时间UNIX时间戳：从格林威治时间1970年01月01日00时00分00秒起至现在的总秒数。UTC时间：世界协调时。以地球自转为基础的时间标准。 UTC表示方式为 年月日时分秒。 获取UNIX时间戳C运行库：#include &amp;lt;sys/time.h&amp;gt;运行环境： C语言运行环境函数： gettimeofday(struct timeval* tv, struct timezone">
+<meta name="keywords" content="linux,socket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux获取时间及Socket编程">
+<meta property="og:url" content="http://victorjiangxin.github.io/linux获取时间及Socket编程/index.html">
+<meta property="og:site_name" content="且听风吟">
+<meta property="og:description" content="如何获取时间UNIX时间戳：从格林威治时间1970年01月01日00时00分00秒起至现在的总秒数。UTC时间：世界协调时。以地球自转为基础的时间标准。 UTC表示方式为 年月日时分秒。 获取UNIX时间戳C运行库：#include &amp;lt;sys/time.h&amp;gt;运行环境： C语言运行环境函数： gettimeofday(struct timeval* tv, struct timezone">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-15T12:32:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux获取时间及Socket编程">
+<meta name="twitter:description" content="如何获取时间UNIX时间戳：从格林威治时间1970年01月01日00时00分00秒起至现在的总秒数。UTC时间：世界协调时。以地球自转为基础的时间标准。 UTC表示方式为 年月日时分秒。 获取UNIX时间戳C运行库：#include &amp;lt;sys/time.h&amp;gt;运行环境： C语言运行环境函数： gettimeofday(struct timeval* tv, struct timezone">
+    
+        <link rel="alternate" type="application/atom+xml" title="且听风吟" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/panda.jpg">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/panda.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/jiangxin.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">JiangXin</h5>
+          <a href="mailto:jiangxin.hust@foxmail.com" title="jiangxin.hust@foxmail.com" class="mail">jiangxin.hust@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                存档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                种类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/VictorJiangXin" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">linux获取时间及Socket编程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">linux获取时间及Socket编程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-21T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2018-04-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/linux学习/">linux学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#如何获取时间"><span class="post-toc-number">1.</span> <span class="post-toc-text">如何获取时间</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#获取UNIX时间戳"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">获取UNIX时间戳</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#获取UTC时间"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">获取UTC时间</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Socket编程"><span class="post-toc-number">2.</span> <span class="post-toc-text">Socket编程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#服务器端"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">服务器端</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#客户端"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">客户端</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实例"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">实例</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="artical-linux获取时间及Socket编程" class="post-article article-type-artical fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">linux获取时间及Socket编程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-22 00:00:00" datetime="2018-04-21T16:00:00.000Z" itemprop="datePublished">2018-04-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/linux学习/">linux学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="如何获取时间"><a href="#如何获取时间" class="headerlink" title="如何获取时间"></a>如何获取时间</h1><p>UNIX时间戳：从格林威治时间1970年01月01日00时00分00秒起至现在的总秒数。<br>UTC时间：世界协调时。以地球自转为基础的时间标准。 UTC表示方式为 年月日时分秒。</p>
+<h2 id="获取UNIX时间戳"><a href="#获取UNIX时间戳" class="headerlink" title="获取UNIX时间戳"></a>获取UNIX时间戳</h2><p>C运行库：<code>#include &lt;sys/time.h&gt;</code><br>运行环境： C语言运行环境<br>函数： <code>gettimeofday(struct timeval* tv, struct timezone* tz)</code><br>功能： 获取当前UNIX时间戳<br>相关结构体：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct timeval&#123;</span><br><span class="line">	long tv_sec;	//seconds</span><br><span class="line">	long tv_usec;	//microSeconds</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">struct timezone&#123;</span><br><span class="line">	int tz_minuteswest;	//diff of greenwich</span><br><span class="line">	int tz_dsttime;	//type of DST correction</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="获取UTC时间"><a href="#获取UTC时间" class="headerlink" title="获取UTC时间"></a>获取UTC时间</h2><p>C运行库：<code>#include &lt;time.h&gt;</code><br>运行环境： C语言运行环境<br>函数1： <code>char *ctime(const time_t *timer)</code><br>功能1： 将UNIX时间戳转化成   Www Mmm dd hh:mm:ss yyyy (Mon Aug 13 08:23:14 2012)形式<br>函数2： <code>struct tm *gmtime(time_t *timer)</code><br>功能2： 将UNIX时间转化成struct tm结构。<br>相关结构体：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct tm&#123;</span><br><span class="line">	int tm_sec;</span><br><span class="line">	int tm_min;</span><br><span class="line">	int tm_hour;</span><br><span class="line">	int tm_mday;</span><br><span class="line">	int tm_mon;</span><br><span class="line">	int tm_year;</span><br><span class="line">	int tm_wday;</span><br><span class="line">	int tm_yday;</span><br><span class="line">	int tm_isdst;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意： UTC时间年是以1900为参考点，记时间时需要year+1900， 时区是0时区，如果按照北京时间（东8区）需要tm_hour+8  </p>
+<p>测试代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;sys/time.h&gt;</span><br><span class="line">#include &lt;time.h&gt;</span><br><span class="line"></span><br><span class="line">struct tm *GetBeijingTime();</span><br><span class="line">int main()&#123;</span><br><span class="line">	struct tm *beijingTime;</span><br><span class="line">	beijingTime = GetBeijingTime();</span><br><span class="line">	printf(&quot;%d/%d/%d %2.2d:%2.2d:%2.2d\n&quot;, beijingTime-&gt;tm_year,</span><br><span class="line">		beijingTime-&gt;tm_mon, beijingTime-&gt;tm_mday, beijingTime-&gt;tm_hour,</span><br><span class="line">		beijingTime-&gt;tm_min, beijingTime-&gt;tm_sec);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">struct tm *GetBeijingTime()&#123;</span><br><span class="line">	struct timeval tv;</span><br><span class="line">	struct tm *BeijingTime;</span><br><span class="line">	gettimeofday(&amp;tv, NULL);</span><br><span class="line">	BeijingTime = gmtime((time_t*)&amp;(tv.tv_sec));</span><br><span class="line">	BeijingTime-&gt;tm_year += 1900;</span><br><span class="line">	BeijingTime-&gt;tm_hour += 8;</span><br><span class="line">	BeijingTime-&gt;tm_mon += 1;</span><br><span class="line">	return BeijingTime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="Socket编程"><a href="#Socket编程" class="headerlink" title="Socket编程"></a>Socket编程</h1><p>包含的库：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="服务器端"><a href="#服务器端" class="headerlink" title="服务器端"></a>服务器端</h2><ul>
+<li>创建socket <code>int socket(int domain, int type, int protocol)</code><ul>
+<li>domain: 协议域，决定了socket的地址类型。<ul>
+<li>AF_INET: 用于IPV4网络通信</li>
+<li>AF_UNIX: 单一Unix系统中进程间通信</li>
+<li>AF_INET6: 用于IPV6网络通信</li>
+</ul>
+</li>
+<li>type: 制定socket类型。<ul>
+<li>SOCK_STREAM: 流式，一般用于TCP通信</li>
+<li>SOCK_DGRAM: 数据包式，一般用于UDP通信</li>
+</ul>
+</li>
+<li>protocaol: 制定协议。 IPPROTO_TCP表示TCP协议，IPPROTO_UDP表示UDP协议，为0时自动选择type默认协议</li>
+<li>return: -1 错误； 非负值 成功</li>
+</ul>
+</li>
+<li><p>绑定socket和端口号 <code>int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)</code></p>
+<ul>
+<li>sockfd: socket返回的套间字描述符，类似于文件描述符。</li>
+<li><p>addr: 有个sockaddr类型数据的指针，指向的时被绑定结构变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">//IPV4的sockaddr地址结构</span><br><span class="line">struct sockaddr_in&#123;</span><br><span class="line">	sa_family sin_family;	//协议类型，AF_INET</span><br><span class="line">	in_port_t sin_port;		//端口号</span><br><span class="line">	struct in_addr sin_addr;	//ip地址</span><br><span class="line">&#125;;</span><br><span class="line">struct in_addr&#123;</span><br><span class="line">	uint32_t s_addr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//有关于sockaddr的相关函数</span><br><span class="line">htons() 将整形类型转换成网络字节序 比如 htons(INADDR_ANY),让系统自动获取本地IP地址</span><br><span class="line">htonl() 将长整形转换为网络字节序</span><br><span class="line">inet_pton(int af, char *str, pvoid addrbuf) 将点分十进制IP地址转换成网络字节</span><br><span class="line">	af: 协议域，与socket的domain一致</span><br><span class="line">	str: 要转换的地址 127.0.0.1</span><br><span class="line">	addrbuf: sinaddr的指针</span><br><span class="line">inet_ntop(int af, pvoid addrbuf, char *str, size_t len) 将网络字节序转换成分十进制IO地址</span><br><span class="line">	af: 协议域，与socket的domain一致</span><br><span class="line">	addrbuf: sinaddr的指针</span><br><span class="line">	str: 转换成的地址</span><br><span class="line">	len: 字节单位长度</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>addrlen: 地址长度</p>
+</li>
+</ul>
+</li>
+<li>监听端口号 <code>int listen(int sockfd, int backlog)</code><ul>
+<li>sockfd: 要监听的sock描述字</li>
+<li>backlog: socket可以排队的最大连接数</li>
+</ul>
+</li>
+<li>接收用户请求 <code>int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)</code><ul>
+<li>sockfd: 服务器socket描述字</li>
+<li>addr: 地址指针，保存用户对应的地址</li>
+<li>addrlen： 地址长度。保存用户地址的长度</li>
+<li>return: 一旦accept某个客户机请求成功，返回一个新的描述符，用于标识具体客户的TCP连接。</li>
+</ul>
+</li>
+<li>从socket中读取字符 <code>ssize_t read(int fd, void *buf, size_t count)</code><ul>
+<li>fd: 读取的用户对应的套间字描述字</li>
+<li>buf: 保存接收信息的缓冲区</li>
+<li>count: 读取的长度</li>
+<li>return: 如果大于零表示读取的长度，返回0表示文件读取结束，小于0表示发生错误</li>
+</ul>
+</li>
+<li>向socket发送信息 <code>ssize_t write(int fd, const void *buf, size_t count)</code><ul>
+<li>fd: 发送的用户对应的套间字</li>
+<li>buf: 缓冲区</li>
+<li>count: 发送的信息长度</li>
+<li>return: 如果大于零表示发送的长度，小于0表示发生错误</li>
+</ul>
+</li>
+<li>关闭socket <code>int close(int fd)</code><ul>
+<li>fd: accept返回的连接描述字，每个连接有一个，生命周期为连接周期。</li>
+<li>ps: sockfd是监听描述字，一个服务器只有一个，用于监听是否有连接；fd是连接描述字，用于每个连接的操作。<h2 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h2></li>
+</ul>
+</li>
+<li>创建socket <code>int socket(int domain, int type, int protocol)</code><ul>
+<li>domain: 协议域，决定了socket的地址类型。<ul>
+<li>AF_INET: 用于IPV4网络通信</li>
+<li>AF_UNIX: 单一Unix系统中进程间通信</li>
+<li>AF_INET6: 用于IPV6网络通信</li>
+</ul>
+</li>
+<li>type: 制定socket类型。<ul>
+<li>SOCK_STREAM: 流式，一般用于TCP通信</li>
+<li>SOCK_DGRAM: 数据包式，一般用于UDP通信</li>
+</ul>
+</li>
+<li>protocaol: 制定协议。 IPPROTO_TCP表示TCP协议，IPPROTO_UDP表示UDP协议，为0时自动选择type默认协议</li>
+<li>return: -1 错误； 非负值 成功</li>
+</ul>
+</li>
+<li>连接指定服务器 <code>int connect(int sockfd, struct sockaddr *addr, socklen_t addrlen)</code><ul>
+<li>sockfd：客户端的sock描述字</li>
+<li>addr: 服务器的地址</li>
+<li>addrlen: socket地址长度</li>
+</ul>
+</li>
+<li>向socket发送信息 <code>ssize_t write(int fd, const void *buf, size_t count)</code><ul>
+<li>fd: 发送的用户对应的套间字</li>
+<li>buf: 缓冲区</li>
+<li>count: 发送的信息长度</li>
+<li>return: 如果大于零表示发送的长度，小于0表示发生错误</li>
+</ul>
+</li>
+<li>关闭socket <code>int close(int fd)</code><ul>
+<li>fd: accept返回的连接描述字，每个连接有一个，生命周期为连接周期。</li>
+</ul>
+</li>
+</ul>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>客户端连接服务器，服务器向客户端发送当地时间，客户端接收并显示。<br>服务器端：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;sys/time.h&gt;</span><br><span class="line">#include &lt;time.h&gt;</span><br><span class="line">#include &lt;errno.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line"></span><br><span class="line">#define DEFAULT_PORT 6666</span><br><span class="line">#define BUF_LEN 128</span><br><span class="line"></span><br><span class="line">struct tm *GetBeijingTime();</span><br><span class="line">int main()&#123;</span><br><span class="line">	int SocketServer;</span><br><span class="line">	struct sockaddr_in ServerAddr;</span><br><span class="line">	char Buf[BUF_LEN];</span><br><span class="line">	</span><br><span class="line">	//create socket</span><br><span class="line">	if((SocketServer = socket(AF_INET, SOCK_STREAM, 0)) == -1)&#123;</span><br><span class="line">		printf(&quot;create socket error!\n&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//create addr</span><br><span class="line">	memset((char*)&amp;ServerAddr, 0, sizeof(ServerAddr));</span><br><span class="line">	ServerAddr.sin_family = AF_INET;</span><br><span class="line">	ServerAddr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">	ServerAddr.sin_port = htons(DEFAULT_PORT);</span><br><span class="line">	</span><br><span class="line">	//bind the socket with address</span><br><span class="line">	if(bind(SocketServer, (struct sockaddr*)&amp;ServerAddr, sizeof(ServerAddr)) == -1)&#123;</span><br><span class="line">		printf(&quot;bind socket with addr fail!\n&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//listen</span><br><span class="line">	if(listen(SocketServer, 20) == -1)&#123;</span><br><span class="line">		printf(&quot;listen error!\n&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	printf(&quot;server: waitting for client connect.........\n&quot;);</span><br><span class="line">	</span><br><span class="line">	//loop for accept</span><br><span class="line">	while(1)&#123;</span><br><span class="line">		int SocketClient;</span><br><span class="line">		struct sockaddr_in ClientAddr;</span><br><span class="line">		char ClientAddrString[30];</span><br><span class="line">		socklen_t ClientAddrLen;</span><br><span class="line"></span><br><span class="line">		if((SocketClient = accept(SocketServer, (struct sockaddr*)&amp;ClientAddr, &amp;ClientAddrLen)) == -1)&#123;</span><br><span class="line">			printf(&quot;accept socket error!\n&quot;);</span><br><span class="line">			exit(0);</span><br><span class="line">		&#125;</span><br><span class="line">		inet_ntop(AF_INET, &amp;ClientAddr.sin_addr, ClientAddrString, sizeof(ClientAddrString));</span><br><span class="line">		printf(&quot;server: %s connecting .....\n&quot;, ClientAddrString);</span><br><span class="line"></span><br><span class="line">		//get the time</span><br><span class="line">		struct tm *beijingTime;</span><br><span class="line">		beijingTime = GetBeijingTime();</span><br><span class="line">		sprintf(Buf, &quot;TIME: %d/%d/%d %2.2d:%2.2d:%2.2d\n&quot;, beijingTime-&gt;tm_year,</span><br><span class="line">		beijingTime-&gt;tm_mon, beijingTime-&gt;tm_mday, beijingTime-&gt;tm_hour,</span><br><span class="line">		beijingTime-&gt;tm_min, beijingTime-&gt;tm_sec);</span><br><span class="line">		</span><br><span class="line">		//send the time </span><br><span class="line">		if(write(SocketClient, Buf, strlen(Buf)) == 0)</span><br><span class="line">			printf(&quot;server: send message error!\n&quot;);</span><br><span class="line">		</span><br><span class="line">		//close the socket connect</span><br><span class="line">		close(SocketClient);</span><br><span class="line">		printf(&quot;server: close the client\n&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	close(SocketServer);</span><br><span class="line">	</span><br><span class="line">	return 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">struct tm *GetBeijingTime()&#123;</span><br><span class="line">	struct timeval tv;</span><br><span class="line">	struct tm *BeijingTime;</span><br><span class="line">	gettimeofday(&amp;tv, NULL);</span><br><span class="line">	BeijingTime = gmtime((time_t*)&amp;(tv.tv_sec));</span><br><span class="line">	BeijingTime-&gt;tm_year += 1900;</span><br><span class="line">	BeijingTime-&gt;tm_hour += 8;</span><br><span class="line">	BeijingTime-&gt;tm_mon += 1;</span><br><span class="line">	return BeijingTime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>客户端：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;sys/time.h&gt;</span><br><span class="line">#include &lt;time.h&gt;</span><br><span class="line">#include &lt;errno.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">#include &lt;netinet/in.h&gt;</span><br><span class="line"></span><br><span class="line">#define BUF_LEN 128</span><br><span class="line"></span><br><span class="line">int main(int argc, char** argv)&#123;</span><br><span class="line">	int SocketClient;</span><br><span class="line">	char Buf[BUF_LEN];</span><br><span class="line">	struct sockaddr_in ServerAddr;</span><br><span class="line">	</span><br><span class="line">	//create socket</span><br><span class="line">	if((SocketClient = socket(AF_INET, SOCK_STREAM, 0)) &lt; 0)&#123;</span><br><span class="line">		printf(&quot;create socket error\n&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//set the server&apos;s addr</span><br><span class="line">	memset((char*)&amp;ServerAddr, 0, sizeof(ServerAddr));</span><br><span class="line">	ServerAddr.sin_family = AF_INET;</span><br><span class="line">	int port = atoi(argv[2]);</span><br><span class="line">	ServerAddr.sin_port = htons(port);</span><br><span class="line">	if(inet_pton(AF_INET, argv[1], &amp;ServerAddr.sin_addr) &lt;= 0)&#123;</span><br><span class="line">		printf(&quot;inet_pton error!\n&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//connect</span><br><span class="line">	if(connect(SocketClient, (struct sockaddr*)&amp;ServerAddr, sizeof(struct sockaddr)) &lt; 0)&#123;</span><br><span class="line">		printf(&quot;connect error!\n&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	memset(Buf, 0, BUF_LEN);</span><br><span class="line">	//read the message from server</span><br><span class="line">	if(recv(SocketClient, Buf, BUF_LEN, 0) &lt; 0)&#123;</span><br><span class="line">		printf(&quot;recv error!!\n&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;Client: recv from server-&gt; %s\n&quot;, Buf);</span><br><span class="line">	</span><br><span class="line">	//close socket</span><br><span class="line">	close(SocketClient);</span><br><span class="line"></span><br><span class="line">	return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-08-15T12:32:30.000Z" itemprop="dateUpdated">2018-08-15 20:32:30</time>
+</span><br>
+
+
+        
+        勿忘初心，方得始终
+        
+    </div>
+    
+    <footer>
+        <a href="http://victorjiangxin.github.io">
+            <img src="/img/jiangxin.jpg" alt="JiangXin">
+            JiangXin
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/socket/">socket</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/linux获取时间及Socket编程/&title=《linux获取时间及Socket编程》 — 且听风吟&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/linux获取时间及Socket编程/&title=《linux获取时间及Socket编程》 — 且听风吟&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/linux获取时间及Socket编程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux获取时间及Socket编程》 — 且听风吟&url=http://victorjiangxin.github.io/linux获取时间及Socket编程/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/linux获取时间及Socket编程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/linux文件编程/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">linux文件编程</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/kerberos认证/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">kerberos认证浅析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+    <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			id: 'linux获取时间及Socket编程',
+            owner: 'VictorJiangXin',
+            repo: 'VictorJiangXin.github.io',
+            oauth: {
+                client_id: '8e74c41139bddec275e5',
+                client_secret: '227f869423c5e8e3cfa929127ff09020e3c9a3f5',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>JiangXin &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/linux获取时间及Socket编程/&title=《linux获取时间及Socket编程》 — 且听风吟&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/linux获取时间及Socket编程/&title=《linux获取时间及Socket编程》 — 且听风吟&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/linux获取时间及Socket编程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux获取时间及Socket编程》 — 且听风吟&url=http://victorjiangxin.github.io/linux获取时间及Socket编程/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/linux获取时间及Socket编程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACtklEQVR42u3aQW7jMBAEwPz/09nLHgLsyumeIRMfSidDkiUWDZB0Dz8+4uPzy/F05uv5fz8/nXn61tMbP24ceHh4eIumv350fs9r0tOZ5Mjbg4eHh3eblwzWydWc/fr+tj2P5/Hw8PDegPfNQBw0+me6AA8PD+89eXnj2oAj6SA8PDy83+XNHv16kkgASQcl7z2QteDh4eHFvLyK9D6fr9T38PDw8NZV9byEn0cPbagxa+ffp+Hh4eFd4OUDbk5tm95u82q/hYeHh3eD9/pCsmng7OA+W8p/0xF4eHh4h3j5sNtezYPafNqon4CHh4d3jZdED+3wPZujTi3E8fDw8H6Ll0exeWwxA+RL7XoVj4eHhzdZLR+YJF6HuW0Imy/Ki87Cw8PDO8prg4NNIJs/c38PHh4e3g1ePrjPJoNNlHBgosLDw8O7wGvLV8kwvXnagVluU53Dw8PDi/+nzwrzCS/B55ur6pIbHh4e3mVeO58kXZMj2zdGy3c8PDy8C7xTZft28kiKcPstXHh4eHg3eG2Zqi3h583KwcX9eHh4eD/IywfrTVjQTgN5l+Hh4eHd4802B+TbC/KINokh2nAEDw8P7x4vGdDPTgyzDQqzghweHh7eWV6b8rbUdoLZRMlFc/Hw8PAWvHaJnGwq3WzSaothw9gXDw8Pb81rB/Qc0C6a2y1f9b8EPDw8vKO8tkGz4TsvcSWAaDGNh4eHd5m3DwWSYGJWZst/Hjw8PLx7vM/yaIf+TZfNCm/FGh8PDw9vxDs1t+TbAjbBxyz8xcPDw7vB28SvyVJ7ExC3S/b/PAcPDw/vGm8zKG+6oy2z5dMYHh4e3vvw9kvtWZfNJgw8PDy89+G1DW2bnsS4UbKCh4eHd42XF71mwWvy9uRb9VU8PDy8C7z27/0+tG03FszejoeHh3eB9wdXrw0BRrn3TgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '悄悄的我走了';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '正如我轻轻的来!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
