@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>且听风吟</title>
+  <title>Jiangxin&#39;s Blog</title>
   <icon>https://www.gravatar.com/avatar/9d3fdbd6c9ddbfc1e23f003190a28e81</icon>
-  <subtitle>充实生活，快乐coding</subtitle>
+  
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://victorjiangxin.github.io/"/>
