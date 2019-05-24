@@ -9,7 +9,7 @@
 
 
 
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
     
     
@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="Python">
-    <meta name="description" content="参数在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有import argparse。下面是常用的用法`parser = argparse.ArgumentParser(description=’’)parser.add_argument(‘–outf’, default=’./data/‘, help=’folder to output images and mod">
+    <meta name="description" content="参数在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有import argparse。下面是常用的用法123parser = argparse.ArgumentParser(description=&amp;apos;&amp;apos;)parser.add_argument(&amp;apos;--outf&amp;apos;, default=&amp;apos;./data/&amp;apos;, help">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python_note">
 <meta property="og:url" content="http://victorjiangxin.github.io/Python-note/index.html">
 <meta property="og:site_name" content="Jiangxin&#39;s Blog">
-<meta property="og:description" content="参数在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有import argparse。下面是常用的用法`parser = argparse.ArgumentParser(description=’’)parser.add_argument(‘–outf’, default=’./data/‘, help=’folder to output images and mod">
+<meta property="og:description" content="参数在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有import argparse。下面是常用的用法123parser = argparse.ArgumentParser(description=&amp;apos;&amp;apos;)parser.add_argument(&amp;apos;--outf&amp;apos;, default=&amp;apos;./data/&amp;apos;, help">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-27T09:10:43.975Z">
+<meta property="og:updated_time" content="2019-05-24T12:03:54.433Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python_note">
-<meta name="twitter:description" content="参数在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有import argparse。下面是常用的用法`parser = argparse.ArgumentParser(description=’’)parser.add_argument(‘–outf’, default=’./data/‘, help=’folder to output images and mod">
+<meta name="twitter:description" content="参数在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有import argparse。下面是常用的用法123parser = argparse.ArgumentParser(description=&amp;apos;&amp;apos;)parser.add_argument(&amp;apos;--outf&amp;apos;, default=&amp;apos;./data/&amp;apos;, help">
     
         <link rel="alternate" type="application/atom+xml" title="Jiangxin&#39;s Blog" href="/atom.xml">
     
@@ -40,13 +40,13 @@
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
-    <!-- custom head -->
+    <!-- custom head --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 
 </head>
 
 <body>
-    <div id="loading" class="active"></div>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
 
     <aside id="menu" class="hide">
   <div class="inner flex-row-vertical">
@@ -185,7 +185,7 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h1><p>在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有<code>import argparse</code>。下面是常用的用法<br><code>`</code><br>parser = argparse.ArgumentParser(description=’’)<br>parser.add_argument(‘–outf’, default=’./data/‘, help=’folder to output images and model checkPoint’)<br>args = parser.parse_args()</p>
+            <h1 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h1><p>在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有<code>import argparse</code>。下面是常用的用法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parser = argparse.ArgumentParser(description=&apos;&apos;)</span><br><span class="line">parser.add_argument(&apos;--outf&apos;, default=&apos;./data/&apos;, help=&apos;folder to output images and model checkPoint&apos;)</span><br><span class="line">args = parser.parse_args()</span><br></pre></td></tr></table></figure></p>
 
         </div>
 
@@ -194,7 +194,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-03-27T09:10:43.975Z" itemprop="dateUpdated">2019-03-27 17:10:43</time>
+    最后更新时间：<time datetime="2019-05-24T12:03:54.433Z" itemprop="dateUpdated">2019-05-24 20:03:54</time>
 </span><br>
 
 
@@ -469,6 +469,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 
 
 
@@ -491,7 +512,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
         }
     });
 })();
-</script>
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 

@@ -9,7 +9,7 @@
 
 
 
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
     
     
@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="以太坊,Geth,Json-RPC">
-    <meta name="description" content="$$a\times b \sqrt{2}$$ 使用Python访问Geth遇到的问题在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：  使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。 进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直">
+    <meta name="description" content="使用Python访问Geth遇到的问题在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：  使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。 进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直处于Stopped状态。geth无法正常运行。">
 <meta name="keywords" content="以太坊,Geth,Json-RPC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过geth Json-Rpc接口遇到的坑">
 <meta property="og:url" content="http://victorjiangxin.github.io/etheStudy/index.html">
 <meta property="og:site_name" content="Jiangxin&#39;s Blog">
-<meta property="og:description" content="$$a\times b \sqrt{2}$$ 使用Python访问Geth遇到的问题在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：  使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。 进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直">
+<meta property="og:description" content="使用Python访问Geth遇到的问题在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：  使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。 进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直处于Stopped状态。geth无法正常运行。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-24T12:01:12.917Z">
+<meta property="og:updated_time" content="2019-05-24T12:10:41.452Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过geth Json-Rpc接口遇到的坑">
-<meta name="twitter:description" content="$$a\times b \sqrt{2}$$ 使用Python访问Geth遇到的问题在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：  使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。 进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直">
+<meta name="twitter:description" content="使用Python访问Geth遇到的问题在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：  使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。 进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直处于Stopped状态。geth无法正常运行。">
     
         <link rel="alternate" type="application/atom+xml" title="Jiangxin&#39;s Blog" href="/atom.xml">
     
@@ -40,13 +40,13 @@
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
-    <!-- custom head -->
+    <!-- custom head --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 
 </head>
 
 <body>
-    <div id="loading" class="active"></div>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
 
     <aside id="menu" class="hide">
   <div class="inner flex-row-vertical">
@@ -185,8 +185,7 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>$$a\times b \sqrt{2}$$</p>
-<h1 id="使用Python访问Geth遇到的问题"><a href="#使用Python访问Geth遇到的问题" class="headerlink" title="使用Python访问Geth遇到的问题"></a>使用Python访问Geth遇到的问题</h1><p>在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：</p>
+            <h1 id="使用Python访问Geth遇到的问题"><a href="#使用Python访问Geth遇到的问题" class="headerlink" title="使用Python访问Geth遇到的问题"></a>使用Python访问Geth遇到的问题</h1><p>在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：</p>
 <ol>
 <li>使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。</li>
 <li>进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直处于Stopped状态。geth无法正常运行。经检测是磁盘空间不足，Geth数据无法同步，导致Geth运行失败，停止尝试。将.ethereum文件夹全部删除，重新运行geth –rpc，发现8545端口正常运行。</li>
@@ -201,7 +200,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-05-24T12:01:12.917Z" itemprop="dateUpdated">2019-05-24 20:01:12</time>
+    最后更新时间：<time datetime="2019-05-24T12:10:41.452Z" itemprop="dateUpdated">2019-05-24 20:10:41</time>
 </span><br>
 
 
@@ -483,6 +482,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 
 
 
@@ -505,7 +525,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
         }
     });
 })();
-</script>
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 
