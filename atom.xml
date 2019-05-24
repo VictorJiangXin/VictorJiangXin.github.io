@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://victorjiangxin.github.io/"/>
-  <updated>2018-08-15T12:32:30.000Z</updated>
+  <updated>2019-03-27T09:10:43.975Z</updated>
   <id>http://victorjiangxin.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python_note</title>
+    <link href="http://victorjiangxin.github.io//Python-note/"/>
+    <id>http://victorjiangxin.github.io//Python-note/</id>
+    <published>2019-03-27T08:57:52.000Z</published>
+    <updated>2019-03-27T09:10:43.975Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h1><p>在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有<code>import argparse</code>。下面是常用的用法<br><code>`</code><br>parser = argparse.ArgumentParser(description=’’)<br>parser.add_argument(‘–outf’, default=’./data/‘, help=’folder to output images and model checkPoint’)<br>args = parser.parse_args()</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;参数&quot;&gt;&lt;a href=&quot;#参数&quot; class=&quot;headerlink&quot; title=&quot;参数&quot;&gt;&lt;/a&gt;参数&lt;/h1&gt;&lt;p&gt;在运行程序中，经常需要输入一系列的参数，用于指定文件夹之类的信息。常用的相关包有&lt;code&gt;import argparse&lt;/code&gt;。下
+      
+    
+    </summary>
+    
+      <category term="笔记" scheme="http://victorjiangxin.github.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="Python" scheme="http://victorjiangxin.github.io/tags/Python/"/>
+    
+  </entry>
   
   <entry>
     <title>python3安装pymssql</title>
@@ -48,15 +73,16 @@
     <link href="http://victorjiangxin.github.io//etheStudy/"/>
     <id>http://victorjiangxin.github.io//etheStudy/</id>
     <published>2018-07-19T08:18:48.000Z</published>
-    <updated>2018-08-15T12:32:30.000Z</updated>
+    <updated>2019-05-24T12:01:12.917Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="使用Python访问Geth遇到的问题"><a href="#使用Python访问Geth遇到的问题" class="headerlink" title="使用Python访问Geth遇到的问题"></a>使用Python访问Geth遇到的问题</h1><p>在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：</p><ol><li>使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。</li><li>进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直处于Stopped状态。geth无法正常运行。经检测是磁盘空间不足，Geth数据无法同步，导致Geth运行失败，停止尝试。将.ethereum文件夹全部删除，重新运行geth –rpc，发现8545端口正常运行。</li><li>geth虽然端口正常运行，但是python仍旧无法去访问JsonRPC服务器。于是运行另一种geth命令。 geth –rpc –rpcaddr 10.21.41.1 –rpcport 8545。运行后，python能够从geth客户端获取信息问题解决。</li><li>问题原因，一开始访问 (ethereum JSONRPC的WIKI)[<a href="https://github.com/ethereum/wiki/wiki/JSON-RPC]里面提供了两种运行命令：" target="_blank" rel="noopener">https://github.com/ethereum/wiki/wiki/JSON-RPC]里面提供了两种运行命令：</a><br><code>geth --rpc</code><br>该种默认rpcaddr是localhost.rpcport是8545。<br><code>geth --rpc --rpcaddr &lt;xx&gt; --rpcport &lt;port&gt;</code><br>该种情况是定义了IP和端口号，我以为localhost应该就是服务器的内网IP即 10.21.41.1但是，实际python访问是不行的，必须定义好rpcaddr，定义它为geth所在服务器的IP地址，从而才可以访问。</li></ol>]]></content>
+    <content type="html"><![CDATA[<p>$$a\times b \sqrt{2}$$</p><h1 id="使用Python访问Geth遇到的问题"><a href="#使用Python访问Geth遇到的问题" class="headerlink" title="使用Python访问Geth遇到的问题"></a>使用Python访问Geth遇到的问题</h1><p>在使用python对Geth提供的Json-RPC服务器进行访问时，一直返回由于目标计算机积极拒接、无法连接的错误，因此作出以下尝试：</p><ol><li>使用python访问百度等官方网站，经测试，可以访问，说明当前配置无问题，问题出现在服务器端。</li><li>进入服务器，用netstat | grep 8545查看相关端口状态，发现端口一直处于Stopped状态。geth无法正常运行。经检测是磁盘空间不足，Geth数据无法同步，导致Geth运行失败，停止尝试。将.ethereum文件夹全部删除，重新运行geth –rpc，发现8545端口正常运行。</li><li>geth虽然端口正常运行，但是python仍旧无法去访问JsonRPC服务器。于是运行另一种geth命令。 geth –rpc –rpcaddr 10.21.41.1 –rpcport 8545。运行后，python能够从geth客户端获取信息问题解决。</li><li>问题原因，一开始访问 (ethereum JSONRPC的WIKI)[<a href="https://github.com/ethereum/wiki/wiki/JSON-RPC]里面提供了两种运行命令：" target="_blank" rel="noopener">https://github.com/ethereum/wiki/wiki/JSON-RPC]里面提供了两种运行命令：</a><br><code>geth --rpc</code><br>该种默认rpcaddr是localhost.rpcport是8545。<br><code>geth --rpc --rpcaddr &lt;xx&gt; --rpcport &lt;port&gt;</code><br>该种情况是定义了IP和端口号，我以为localhost应该就是服务器的内网IP即 10.21.41.1但是，实际python访问是不行的，必须定义好rpcaddr，定义它为geth所在服务器的IP地址，从而才可以访问。</li></ol>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;h1 id=&quot;使用Python访问Geth遇到的问题&quot;&gt;&lt;a href=&quot;#使用Python访问Geth遇到的问题&quot; class=&quot;headerlink&quot; title=&quot;使用Python访问Geth遇到的问题&quot;&gt;&lt;/a&gt;使用Python访问Geth遇到的问题&lt;/h1&gt;&lt;p&gt;在使
+        &lt;p&gt;$$a\times b \sqrt{2}$$&lt;/p&gt;
+&lt;h1 id=&quot;使用Python访问Geth遇到的问题&quot;&gt;&lt;a href=&quot;#使用Python访问Geth遇到的问题&quot; class=&quot;headerlink&quot; title=&quot;使用Python访问Geth遇到的问题&quot;&gt;&lt;/a
       
     
     </summary>
