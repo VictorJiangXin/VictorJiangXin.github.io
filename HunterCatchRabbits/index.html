@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="算法">
-    <meta name="description" content="题目描述：假设卧底和特工有n个接头地点，编号为0和n-1。卧底每天晚上仅能换到相邻的接头地点，而特工每天白天在一个接头地点检查。 特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。 输入描述：首先输入n和k（n&amp;lt;100,k&amp;lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。 输出描述：如果一定能与卧底碰头，输">
+    <meta name="description" content="题目描述：假设卧底和特工有n个接头地点，编号为0和n-1。卧底每天晚上仅能换到相邻的接头地点，而特工每天白天在一个接头地点检查。 特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。输入描述：首先输入n和k（n&amp;lt;100,k&amp;lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。输出描述：如果一定能与卧底碰头，输出Y">
 <meta name="keywords" content="算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HunterCatchRabbits">
 <meta property="og:url" content="http://victorjiangxin.github.io/HunterCatchRabbits/index.html">
 <meta property="og:site_name" content="Jiangxin&#39;s Blog">
-<meta property="og:description" content="题目描述：假设卧底和特工有n个接头地点，编号为0和n-1。卧底每天晚上仅能换到相邻的接头地点，而特工每天白天在一个接头地点检查。 特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。 输入描述：首先输入n和k（n&amp;lt;100,k&amp;lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。 输出描述：如果一定能与卧底碰头，输">
+<meta property="og:description" content="题目描述：假设卧底和特工有n个接头地点，编号为0和n-1。卧底每天晚上仅能换到相邻的接头地点，而特工每天白天在一个接头地点检查。 特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。输入描述：首先输入n和k（n&amp;lt;100,k&amp;lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。输出描述：如果一定能与卧底碰头，输出Y">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2018-08-15T12:32:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HunterCatchRabbits">
-<meta name="twitter:description" content="题目描述：假设卧底和特工有n个接头地点，编号为0和n-1。卧底每天晚上仅能换到相邻的接头地点，而特工每天白天在一个接头地点检查。 特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。 输入描述：首先输入n和k（n&amp;lt;100,k&amp;lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。 输出描述：如果一定能与卧底碰头，输">
+<meta name="twitter:description" content="题目描述：假设卧底和特工有n个接头地点，编号为0和n-1。卧底每天晚上仅能换到相邻的接头地点，而特工每天白天在一个接头地点检查。 特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。输入描述：首先输入n和k（n&amp;lt;100,k&amp;lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。输出描述：如果一定能与卧底碰头，输出Y">
     
         <link rel="alternate" type="application/atom+xml" title="Jiangxin&#39;s Blog" href="/atom.xml">
     
@@ -182,11 +182,10 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><pre><code>假设卧底和特工有n个接头地点，编号为0和n-1。卧底每天晚上仅能换到相邻的接头地点，而特工每天白天在一个接头地点检查。
-特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。
-</code></pre><h1 id="输入描述："><a href="#输入描述：" class="headerlink" title="输入描述："></a>输入描述：</h1><pre><code>首先输入n和k（n&lt;100,k&lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。
-</code></pre><h1 id="输出描述："><a href="#输出描述：" class="headerlink" title="输出描述："></a>输出描述：</h1><pre><code>如果一定能与卧底碰头，输出Yes，否则输出No。
-</code></pre><h1 id="测试用例："><a href="#测试用例：" class="headerlink" title="测试用例："></a>测试用例：</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5 6</span><br><span class="line">1 2 3 3 2 1</span><br><span class="line">Yes</span><br></pre></td></tr></table></figure>
+特工告诉你每天检查的接头地点的编号，希望你分析一下是否一定能与卧底碰头。</code></pre><h1 id="输入描述："><a href="#输入描述：" class="headerlink" title="输入描述："></a>输入描述：</h1><pre><code>首先输入n和k（n&lt;100,k&lt;1000），分别表示接头地点的个数和特工检查的天数；接下来输入k个整数，表示特工每天检查的接头地点的编号。</code></pre><h1 id="输出描述："><a href="#输出描述：" class="headerlink" title="输出描述："></a>输出描述：</h1><pre><code>如果一定能与卧底碰头，输出Yes，否则输出No。</code></pre><h1 id="测试用例："><a href="#测试用例：" class="headerlink" title="测试用例："></a>测试用例：</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5 6</span><br><span class="line">1 2 3 3 2 1</span><br><span class="line">Yes</span><br></pre></td></tr></table></figure>
+
 <h1 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码:"></a>测试代码:</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"> </span><br><span class="line">bool canCatchRibbit(vector&lt;int&gt; holeNums, vector&lt;int&gt; checked)</span><br><span class="line">&#123;</span><br><span class="line">	</span><br><span class="line">	int k = holeNums.size();</span><br><span class="line">	int n = checked.size();</span><br><span class="line">	bool flag = true;</span><br><span class="line">	int cnt = n;  //  cnt为兔子能待的洞的个数，初试化为所有洞的个数</span><br><span class="line">	for (int i = 0; i &lt; k; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		int holeNum = holeNums[i] - 1; //  holeNum为洞的编号在vector中的序号，</span><br><span class="line">		                               //  如：编号为1的洞在vector里面存的是0</span><br><span class="line">		if (checked[holeNum] == 1)</span><br><span class="line">		&#123;</span><br><span class="line">			checked[holeNum] = 0;</span><br><span class="line">			cnt--;</span><br><span class="line">		&#125;</span><br><span class="line">		if (cnt == 0)   //  如果兔子能待的洞的个数为0，则兔子肯定会被逮住</span><br><span class="line">		&#123;</span><br><span class="line">			flag = false;</span><br><span class="line">			break;</span><br><span class="line">		&#125;</span><br><span class="line">		for (int j = 0; j &lt; n; j++)</span><br><span class="line">		&#123;</span><br><span class="line">			if (checked[j] == 1)</span><br><span class="line">			&#123;</span><br><span class="line">				checked[j] = 0;</span><br><span class="line">				cnt--;</span><br><span class="line">				if (j&gt;0 &amp;&amp; checked[j - 1] == 0)</span><br><span class="line">				&#123;</span><br><span class="line">					checked[j - 1] = 1;</span><br><span class="line">					cnt++;</span><br><span class="line">				&#125;</span><br><span class="line">				if (j &lt; n - 1 &amp;&amp; checked[j + 1] == 0)</span><br><span class="line">				&#123;</span><br><span class="line">					checked[j + 1] = 1;</span><br><span class="line">					cnt++;</span><br><span class="line">					j++;  //原来值为0的洞现在为1后是不能往相邻的洞跳，故继续检查下一个洞</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return flag;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	int n, k;  //  n为洞的个数，k为检查的天数</span><br><span class="line">	cin &gt;&gt; n &gt;&gt; k;</span><br><span class="line">	vector &lt;int&gt; holeNums(k, 0);  //  holeNums为每天检查的洞的编号</span><br><span class="line">	for (auto &amp;m : holeNums)</span><br><span class="line">		cin &gt;&gt; m;</span><br><span class="line">	vector&lt;int&gt; checked(n, 1);  //  checked为每天检查的洞中是否有兔子,可能有兔子则值为1，</span><br><span class="line">	                            //  一定没兔子则值为0，全部初始化为1；</span><br><span class="line">	bool flag = canCatchRibbit(holeNums, checked);</span><br><span class="line">	if (!flag)</span><br><span class="line">		cout &lt;&lt; &quot;Yes&quot; &lt;&lt; endl;</span><br><span class="line">	else</span><br><span class="line">		cout &lt;&lt; &quot;No&quot; &lt;&lt; endl;</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
         </div>
 
@@ -520,7 +519,24 @@ MathJax.Hub.Queue(function() {
         }
     });
 })();
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

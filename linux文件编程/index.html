@@ -187,6 +187,7 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Linux系统讲所有设备都当作文件来处理，因此Linux文件编程极其重要！<br>linux文件编程设计到文件的读、写定位等各种操作。其中对文件的操作都只能由内核态完成，用户态想要访问文件只能通过系统调用。<br>Linux文件编程中，最重要的一个概念便是文件描述符fd，所有文件的操作都通过文件描述符进行，每个文件对应一个文件描述符。<br>打开现存文件或新建文件时，内核会返回一个文件描述符，读写文件也需要使用文件描述符。  </p>
 <h1 id="需要添加的函数库"><a href="#需要添加的函数库" class="headerlink" title="需要添加的函数库"></a>需要添加的函数库</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;fcntl.h&gt;	//文件控制选项头文件</span><br><span class="line">#include &lt;unistd.h&gt; //针对系统调用封装</span><br><span class="line">#include &lt;sys/type.h&gt;</span><br></pre></td></tr></table></figure>
+
 <h1 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h1><h2 id="open-打开文件"><a href="#open-打开文件" class="headerlink" title="open 打开文件"></a>open 打开文件</h2><p>函数原型： <code>int open(char *name, int how)</code><br>功能： 打开一个文件</p>
 <ul>
 <li>name: 文件名</li>
@@ -597,7 +598,24 @@ MathJax.Hub.Queue(function() {
         }
     });
 })();
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

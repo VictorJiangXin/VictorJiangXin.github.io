@@ -204,11 +204,14 @@
 </li>
 <li><p>将本地项目与Github上的一个项目进行关联。先切换到目的目录，执行下面命令,把远程仓库的名字命名为origin<br><code>git remote add origin git@github.com:&lt;USERNAME&gt;/&lt;User.resource&gt;.git</code>  </p>
 </li>
-<li>提交项目前，注意！！！一定要先设置用户名与邮箱  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git config —global user.name &quot;&lt;your name&gt;&quot;</span><br><span class="line">git config —global user.email &quot;&lt;your email&gt;&quot;</span><br><span class="line">```  </span><br><span class="line">* 创建分支  </span><br><span class="line">`git checkout -b &lt;branch name&gt;`  </span><br><span class="line"></span><br><span class="line"># 本地已有版本库，要推送至Github</span><br><span class="line">首先，Github上已有一个Repository, `git@github.com:VictoryJiangXin/mShell.git`</span><br><span class="line">然后，进入目录，比如f:\mShell</span><br><span class="line">然后命令步骤如下：</span><br></pre></td></tr></table></figure>
+<li><p>提交项目前，注意！！！一定要先设置用户名与邮箱  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">git config —global user.name &quot;&lt;your name&gt;&quot;</span><br><span class="line">git config —global user.email &quot;&lt;your email&gt;&quot;</span><br><span class="line">```  </span><br><span class="line">* 创建分支  </span><br><span class="line">`git checkout -b &lt;branch name&gt;`  </span><br><span class="line"></span><br><span class="line"># 本地已有版本库，要推送至Github</span><br><span class="line">首先，Github上已有一个Repository, `git@github.com:VictoryJiangXin/mShell.git`</span><br><span class="line">然后，进入目录，比如f:\mShell</span><br><span class="line">然后命令步骤如下：</span><br></pre></td></tr></table></figure>
+
 </li>
 </ul>
-<p>git init<br>git remote add &lt;Repository’s name&gt; <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:VictoryJiangXin/mShell.git<br>git add <the file="" you="" need=""><br>git commit -m “<the description="" of="" commit="">“<br>git push -u &lt;Repository’s name&gt; master<br><code>`</code></the></the></p>
-
+<p>git init<br>git remote add &lt;Repository’s name&gt; <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:VictoryJiangXin/mShell.git<br>git add <the file="" you="" need=""><br>git commit -m “<the description="" of="" commit="">“
+git push -u &lt;Repository’s name&gt; master</the></the></p>
+<pre><code></code></pre>
         </div>
 
         <blockquote class="post-copyright">
@@ -541,7 +544,24 @@ MathJax.Hub.Queue(function() {
         }
     });
 })();
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

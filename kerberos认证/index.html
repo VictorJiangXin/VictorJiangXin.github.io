@@ -197,13 +197,14 @@
                 <div class="image-caption"></div>
             </figure>
 <p>A与B之间有一个密钥key(A,B)，这个密钥只有它们两者拥有。<br>当A需要向B证明它是A时，发送两条信息。<br>一条为A的用户信息的明文，另一条为使用密钥key加密过的明文信息。<br>B接收后，用密钥key进行解密，然后将解密后的信息与明文信息比较。<br>如果他们是一样的，则表明对方就是A。从而，B确认A的身份。</p>
-<h1 id="引入KDC：key-A-B-从何而来"><a href="#引入KDC：key-A-B-从何而来" class="headerlink" title="引入KDC：key(A,B)从何而来"></a>引入KDC：key(A,B)从何而来</h1><p>为了保证认证的安全性，key(A,B)应该是有时效性的，不能是固定的。<br>因此KDC在整个认证系统中起共同信任的第三方作用。<br><figure class="image-bubble">
+<h1 id="引入KDC：key-A-B-从何而来"><a href="#引入KDC：key-A-B-从何而来" class="headerlink" title="引入KDC：key(A,B)从何而来"></a>引入KDC：key(A,B)从何而来</h1><p>为了保证认证的安全性，key(A,B)应该是有时效性的，不能是固定的。<br>因此KDC在整个认证系统中起共同信任的第三方作用。</p>
+<figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
                     <img src="/img/kerberos_1.png" alt="" title="">
                 </div>
                 <div class="image-caption"></div>
-            </figure></p>
+            </figure>
 <h2 id="大概流程"><a href="#大概流程" class="headerlink" title="大概流程"></a>大概流程</h2><ul>
 <li>A向KDC发出申请，申请中包含了A的身份信息</li>
 <li>KDC查询白名单，如果A存在则向A发送两条信息<ul>
@@ -558,7 +559,24 @@ MathJax.Hub.Queue(function() {
         }
     });
 })();
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

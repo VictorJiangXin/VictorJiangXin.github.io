@@ -189,7 +189,10 @@
 <h1 id="Task及awit-async"><a href="#Task及awit-async" class="headerlink" title="Task及awit/async"></a>Task及awit/async</h1><p>async/await 结构可分成三部分：<br>     （1）调用方法：该方法调用异步方法，然后在异步方法执行其任务的时候继续执行；<br>     （2）异步方法：该方法异步执行工作，然后立刻返回到调用方法；<br>     （3）await 表达式：用于异步方法内部，指出需要异步执行的任务。一个异步方法可以包含多个 await 表达式（不存在 await 表达式的话 IDE 会发出警告）。  </p>
 <h2 id="如何看异步代码？"><a href="#如何看异步代码？" class="headerlink" title="如何看异步代码？"></a>如何看异步代码？</h2><p>async定义的函数可分为以下几部分： await之前的部分；await部分；await之后的部分。<br>当主函数运行到async函数时，先运行await之前的部分，遇到await后，线程分为两部分，（此时主线程从async函数中已经返回了）一个线程在主函数中继续运行，另一线程在继续运行await函数。PS:async函数内部的执行顺序，还是不变的，严格从上往下执行，即使有多个awit关键词，仍旧执行完前一个await语句后，再执行后一个await语句。</p>
 <h2 id="示例代码与输出"><a href="#示例代码与输出" class="headerlink" title="示例代码与输出"></a>示例代码与输出</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">class Program</span><br><span class="line">    &#123;</span><br><span class="line">        static void Main(string[] args)</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;main thread start!&quot;);</span><br><span class="line">            Task t = TestAsync();</span><br><span class="line">            Console.WriteLine(&quot;main thread end!&quot;);</span><br><span class="line">            Console.Read();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private static async Task TestAsync()</span><br><span class="line">        &#123;</span><br><span class="line">            Console.WriteLine(&quot;Task start!&quot;);</span><br><span class="line">            await Task.Run(() =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(&quot;await0 start!&quot;);</span><br><span class="line">                for (int i = 0; i &lt; 500000; i++)</span><br><span class="line">                    ;</span><br><span class="line">                Console.WriteLine(&quot;await0 end!&quot;);</span><br><span class="line">            &#125;);</span><br><span class="line">            await Task.Run(()=&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(&quot;awit1 start!&quot;);</span><br><span class="line">                for (int i = 0; i &lt; 5; i++)</span><br><span class="line">                    ;</span><br><span class="line">                Console.WriteLine(&quot;awit1 end!&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>运行结果如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main thread start!</span><br><span class="line">Task start!</span><br><span class="line">await0 start!</span><br><span class="line">main thread end!</span><br><span class="line">await0 end!</span><br><span class="line">awit1 start!</span><br><span class="line">awit1 end!</span><br></pre></td></tr></table></figure></p>
+
+<p>运行结果如下所示：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main thread start!</span><br><span class="line">Task start!</span><br><span class="line">await0 start!</span><br><span class="line">main thread end!</span><br><span class="line">await0 end!</span><br><span class="line">awit1 start!</span><br><span class="line">awit1 end!</span><br></pre></td></tr></table></figure>
+
 
         </div>
 
@@ -516,7 +519,24 @@ MathJax.Hub.Queue(function() {
         }
     });
 })();
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

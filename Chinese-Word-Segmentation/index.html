@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>基于Linear-CRF(线性条件随机场)的中文分词 | Jiangxin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="NLP,中文分词,Linear CRF">
+    <meta name="description" content="[TOC] 1、Motivation研一下选修了宗成庆老师的「自然语言处理」，课程要求完成一系列的大作业，然而已是拖延症晚期的我，一直将其晾在一边，直到今天，才真正开始启动项目。由于实验室资源匮乏，没有GPU，因此只能选择使用传统方法的大作业，最终确定中文分词实验。 话不多说，先看前言论文，看看当前中文分词的前沿水平。">
+<meta name="keywords" content="NLP,中文分词,Linear CRF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Linear-CRF(线性条件随机场)的中文分词">
+<meta property="og:url" content="http://victorjiangxin.github.io/Chinese-Word-Segmentation/index.html">
+<meta property="og:site_name" content="Jiangxin&#39;s Blog">
+<meta property="og:description" content="[TOC] 1、Motivation研一下选修了宗成庆老师的「自然语言处理」，课程要求完成一系列的大作业，然而已是拖延症晚期的我，一直将其晾在一边，直到今天，才真正开始启动项目。由于实验室资源匮乏，没有GPU，因此只能选择使用传统方法的大作业，最终确定中文分词实验。 话不多说，先看前言论文，看看当前中文分词的前沿水平。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_0.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_1.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_3.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_4.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_7.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_8.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_9.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_10.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_11.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_14.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_12.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_15.png">
+<meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_2.png">
+<meta property="og:updated_time" content="2019-05-26T03:20:45.560Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于Linear-CRF(线性条件随机场)的中文分词">
+<meta name="twitter:description" content="[TOC] 1、Motivation研一下选修了宗成庆老师的「自然语言处理」，课程要求完成一系列的大作业，然而已是拖延症晚期的我，一直将其晾在一边，直到今天，才真正开始启动项目。由于实验室资源匮乏，没有GPU，因此只能选择使用传统方法的大作业，最终确定中文分词实验。 话不多说，先看前言论文，看看当前中文分词的前沿水平。">
+<meta name="twitter:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_0.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jiangxin&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/panda.jpg">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/panda.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/jiangxin.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">JiangXin</h5>
+          <a href="mailto:jiangxin.hust@foxmail.com" title="jiangxin.hust@foxmail.com" class="mail">jiangxin.hust@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                存档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                种类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/VictorJiangXin" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于Linear-CRF(线性条件随机场)的中文分词</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">基于Linear-CRF(线性条件随机场)的中文分词</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-05-25T06:00:55.000Z" itemprop="datePublished" class="page-time">
+  2019-05-25
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器学习/">机器学习</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1、Motivation"><span class="post-toc-number">1.</span> <span class="post-toc-text">1、Motivation</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2、CRF-条件随机场"><span class="post-toc-number">2.</span> <span class="post-toc-text">2、CRF 条件随机场</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-1、Linear-CRF-线性链条件随机场"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">2.1、Linear CRF(线性链条件随机场)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-2、线性链条件随机场的参数化形式"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2.2、线性链条件随机场的参数化形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-3、简单点，表达的方式简单点"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">2.3、简单点，表达的方式简单点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-4、条件随机场的矩阵形式"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">2.4、条件随机场的矩阵形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-5、条件随机场的概率计算问题"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">2.5、条件随机场的概率计算问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-6、条件随机场的预测问题"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">2.6、条件随机场的预测问题</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参考文献"><span class="post-toc-number">3.</span> <span class="post-toc-text">参考文献</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="article-Chinese-Word-Segmentation" class="post-article article-type-article fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于Linear-CRF(线性条件随机场)的中文分词</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-05-25 14:00:55" datetime="2019-05-25T06:00:55.000Z" itemprop="datePublished">2019-05-25</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/机器学习/">机器学习</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>[TOC]</p>
+<h1 id="1、Motivation"><a href="#1、Motivation" class="headerlink" title="1、Motivation"></a>1、Motivation</h1><p>研一下选修了宗成庆老师的「自然语言处理」，课程要求完成一系列的大作业，然而已是拖延症晚期的我，一直将其晾在一边，直到今天，才真正开始启动项目。由于实验室资源匮乏，没有GPU，因此只能选择使用传统方法的大作业，最终确定中文分词实验。</p>
+<p>话不多说，先看前言论文，看看当前中文分词的前沿水平。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_0.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<center>Bidirectional LSTM-CRF Models for Sequence Tagging, Kai Yu, 2015</center>
+
+<p>由此可见，2015年及之前中文分词效果最好的是使用BI-LSTM+CRF，其相对准确度最高，但将其与传统的CRF方法比较！！！！！！竟然只是个位数的提升，而且还要耗费巨大的计算量，这实在不是个划算的生意！总体而言，深度学习在自然语言处理方向，还是机器翻译的提升最大，其他比较传统的任务，传统的方法已经足够了。因此，果断选择使用CRF(条件随机场)，来完成中文分词任务。</p>
+<p>目前，已经有非常多的开源CRF包了，而且也非常好用，直接用这些包完成中文分词任务将会十分简单。但是，直接使用CRF包，就太没挑战性了，也不能够促进对知识点的理解，重点是——没有情怀！搞科研，最重要的是情怀，^_^，要有将知识转为实践的能力。因此，本次决定用Python实现一个简单的Linear-CRF，用于完成中文分词任务，Let’s Go!</p>
+<h1 id="2、CRF-条件随机场"><a href="#2、CRF-条件随机场" class="headerlink" title="2、CRF 条件随机场"></a>2、CRF 条件随机场</h1><p>要了解CRF，最好先了解下隐马尔科夫模型，可以看看<a href="https://zhuanlan.zhihu.com/p/24322275" target="_blank" rel="noopener">隐马尔科夫模型在分词上的应用</a> ，先对HMM有个简答的了解，然后再理解CRF可以更容易些。</p>
+<p>首先，什么是CRF(条件随机场)？如下图所示，白色的点表示为$Y$，黑色的点表示为$X$，设$X$与$Y$是随机变量，$P(Y|X)$是在给定$X$的条件下$Y$的条件概率分布，若随机变量$Y$构成了一个由无向图$G=(V,E)$表示的马尔可夫随机场，即：</p>
+<p>$$P(Y_v|X, Y_w, w\ne v)=P(Y_v|X,Y_w,w\sim v)$$ </p>
+<p>则称$P(Y|X)$为条件随机场。简而言之，就是随机变量$Y$所在的节点的随机变量，概率分布只与与其连接的节点有关。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_1.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<center>CRF结构图</center>
+
+<h2 id="2-1、Linear-CRF-线性链条件随机场"><a href="#2-1、Linear-CRF-线性链条件随机场" class="headerlink" title="2.1、Linear CRF(线性链条件随机场)"></a>2.1、Linear CRF(线性链条件随机场)</h2><p>线性条件随机场是条件随机场的一种，其结构如上图的中间所示，随机变量$Y_t$的分布，除了给定的随机变量$X$外，只与其前后的随机变量$Y_{t-1}$以及$Y_{t+1}$有关。本次分词任务所用的即为线性条件随机场，后文所介绍皆以线性条件随机场为主，所称CRF也都指线性条件随机场，后文将不再赘婿。</p>
+<h2 id="2-2、线性链条件随机场的参数化形式"><a href="#2-2、线性链条件随机场的参数化形式" class="headerlink" title="2.2、线性链条件随机场的参数化形式"></a>2.2、线性链条件随机场的参数化形式</h2><p>设$P(Y|X)$为线性链条件随机场，则在随机变量$X$取值为$x$的条件下，随机变量$Y$取值为$y$的条件概率具有以下形式(上面所说的$x$，$y$均表示一个序列)：<br>$$<br>P(y|x)=\frac{1}{Z(x)} exp\left( \sum_{i,k}{\lambda_k t_k (y_{i-1}, y_i, x, i) + \sum_{i,l}{\mu_i s_l(y_i, x, i)}}\right)<br>$$</p>
+<p>其中，<br>$$<br>Z(x) = \sum_{y}{exp\left(\sum_{i,k}{\lambda_k t_k (y_{i-1}, y_i, x, i) + \sum_{i,l}{\mu_i s_l(y_i, x, i)}} \right)}<br>$$</p>
+<p>上式中，$t_k$和$s_l$为特征函数，$\lambda_k$和$s_l$代表的是对应的权值，$Z(x)$对应的是规范化因子。其中，特征函数一般随任务自由设定，其值一般为0或者1，而条件随机场需要训练的就是相关的权重值，比如$\lambda_k$与$s_l$。</p>
+<h2 id="2-3、简单点，表达的方式简单点"><a href="#2-3、简单点，表达的方式简单点" class="headerlink" title="2.3、简单点，表达的方式简单点"></a>2.3、简单点，表达的方式简单点</h2><p>由于条件随机场在同一特征的各个位置中都有定义，可以对同一个特征在各个位置进行求和，将局部特征函数转化为一个全局特征函数，这样可以将条件随机场写成权值向量和特征向量的內积形式，即其简化表示，首先将转移特征与状态特征用统一的符号进行表示，设有$K_1$个转移特征，$K_2$个状态特征，$K=K_1+K_2$，记：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_3.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>同理，用$w_k$表示特征$f_k(y,x)$的权值，即：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_4.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>因此，条件随机场可表示为：<br>$$<br>P(y|x)=\frac{1}{Z(x)} exp \sum_{i=1}^n{\sum_{k=1}^K{w_kf_k(y_{i-1}, y_i, x, i)}}$$<br>$$ Z(x)=\sum_{y}exp \sum_{i=1}^n{\sum_{k=1}^K{w_kf_k(y_{i-1}, y_i, x, i)}}<br>$$<br>我们常用矩阵去进行表示并进行相关计算，以$w$表示权重向量，即：<br>$$<br>W=(w_1,w_2,…,w_K)^T<br>$$<br>而求得位置$i$对应的所有的特征表示为：<br>$$<br>F_i(x,y)=[f_1(i,x,y_i,y_{i-1}),f_2(i,x,y_i,y_{i-1}),…,f_K(i,x,y_i,y_{i-1})]^T\<br>$$<br>该等式表示的是位置$i$对应的相关特征，比如$F_1(x,y)=[1,0,0,0,1,0,0]$表示对于给定的$x$，$y$序列在序列的第一个位置，其具有相应的$f_1$特征，$f_5$特征。因此，此时条件随机场的计算可以表示为：<br>$$<br>P(y|x)=\frac{1}{Z(x)} exp(W^T.\sum_{i=1}^{n}{F_i(x,y)})<br>$$<br>比如：</p>
+<p>$$X=(x_1,x_2)$$</p>
+<p>$$X=(x_1,x_2)$$</p>
+<p>$$Y=(Y_1,Y_2)$$</p>
+<p>$$W=(w_1,w_2,w_3,w_4)$$</p>
+<p>为了计算$P(y|x)$，先计算各个位置对应的特征值，为:</p>
+<p>$$F_1=[1,0,0,1]$$</p>
+<p>$$F_2=[0,1,0,1]$$<br>$$F=F_1+F_2=[1,1,0,2]$$</p>
+<p>$$P(y|x)=\frac{1}{Z(x)}exp((w_1,w_2,w_3,w_4).(1，1，0，2)^T)=\frac{1}{Z(x)}exp(w_1+w_2+2w_4)$$</p>
+<p>同理，再去求$Z(x)$可以得到相关值，但$Z(x)$有其他计算方法，后面会再介绍。</p>
+<p>只用公式太枯燥了，让我们举个栗子吧！以分词任务为例，$x$表示语句”今晚/月色/真/美”，而$y$采用常用的分词标注次，即为$y={B,E,I,S}$，其中$B$表示词语的开头，$E$表示词语的结尾，$I$表示词语的中间词，$S$表示单个词，则栗子中$y$对应的序列应该为$BEBESS$。而特征只举简单的栗子，只对单个词取特征，因此我们的特征对应为：</p>
+<p> $$s_1=s_1(y_i=B,x[i]=’今’)\ \lambda_1=1$$<br>$$s_2=s_2(y_i=E,x[i]=’今’)\ \lambda_2=0.5$$<br>$$s_3=s_3(y_i=S,x[i]=’今’)\ \lambda_3=0.2$$<br>$$s_4=s_4(y_i=I,x[i]=’今’)\ \lambda_4=0.3$$<br>$$s_5=s_5(y_i=B,x[i]=’晚’)\ \lambda_5=0.5$$<br>$$s_6=s_6(y_i=E,x[i]=’晚’)\ \lambda_6=0.5$$<br>$$s_7=s_7(y_i=S,x[i]=’晚’)\ \lambda_7=0.5$$<br>$$s_8=s_8(y_i=I,x[i]=’晚’)\ \lambda_8=0.5$$<br>$$…$$<br>$$t_1=t_1(y_{i-1}=E,y_i=E,x[i]=’今’)\ \mu_1=0.5$$<br>$$t_2=t_2(y_{i-1}=B,y_i=E,x[i]=’今’)\ \mu_2=0.5$$<br>$$…$$</p>
+<p>这些特征只有在满足条件时为1，否则为0。而右边的$\lambda$以及$\mu$是模型的参数，则对于此时，$P(y|x)$可表示为：<br>$$<br>P(y|x)=\frac{1}{Z(x)} exp(\lambda_1+\lambda_6+…)<br>$$<br>上式值写了部分，其含义是，在第一个位置’今’，上面所列举的特征只有$f_1(y_1=B,x[1]=’今’)=1$，其余的特征对应为0，而第二个位置’晚’,上面所列举的特征只有$f_6(y_2=E,x[2]=’晚’)=1$。同理，可推导其他位置对应的特征，从而得到当前CRF模型下，对于给定$x$以及$y$对应的概率值。而$Z(x)$的要针对所有的$y$的可能进行累加，也就是类似语句”今晚/月色/真/美”对应的标记为$EEBESS$，$EEEESS$等等，所有的可能性，在当前CRF模型(给定特征权重参数情况下)，计算得到的概率的和。</p>
+<h2 id="2-4、条件随机场的矩阵形式"><a href="#2-4、条件随机场的矩阵形式" class="headerlink" title="2.4、条件随机场的矩阵形式"></a>2.4、条件随机场的矩阵形式</h2><p>条件随机场可以由矩阵表示，假设$P_w(y|x)$是线性链条件随机场，表示给定观测序列$x$，相应的标记序列$y$的条件概率，引进特殊的起点和终点状态标记$y_0=start$，$y_{n+1}=end$，$y$可表示为$m$中形式即$y$的表示形式可以为$Y=(Y_1,Y_2,…,Y_m)$，则此时的$P_w(y|x)$可以通过矩阵形式表示。</p>
+<p>对观测序列$x$的每一个位置$i=1,2,…,n+1$，定义一个$m$阶矩阵：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_7.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>因此，此时的条件概率$P(y|x)$可以表示为：<br>$$<br>P_w(y|x)=\frac{1}{Z(x)}\prod_{i=1}^{n+1}{M_i(y_{i-1},y_i,x)}<br>$$<br>$Z(x)$规范化因子，则可表示为$(n+1)$个矩阵乘积中的元素：$$Z_w(x)=(M_1(x),M_2(x),…,(M_{n+1}(x)))_{[start][end]}$$</p>
+<p>注意！！$M_i(x)$与$M_i(y_{i-1},y_i,x)$的区别，$M_i(x)$表示的是$m \times m$的矩阵，而$M_i(y_{i-1},y_i,x)$只是该矩阵中，$y_{i-1},y_i$为确定表示的一个元素。</p>
+<p>举个栗子，给定一个线性链条件随机场，观测序列$x$，状态序列$y$，$i=1,2,3$，$ n=3$，标记$y_i={1,2}$ 假设$y_0=start=1$，$y_4=stop-1$，各个位置的随机矩阵分别为：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_8.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>从start到end对应的各个路径的非规范化概率分别是：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_9.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>而计算矩阵$M_1(x)M_2(x)M_3(x)M_4(x)$，其第一行第一列对应的元素为：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_10.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="2-5、条件随机场的概率计算问题"><a href="#2-5、条件随机场的概率计算问题" class="headerlink" title="2.5、条件随机场的概率计算问题"></a>2.5、条件随机场的概率计算问题</h2><p><strong>前向向量</strong></p>
+<p>对于每个位置$i=0,1,..,n+1$，定义前向向量$\alpha_i(x)_{m\times 1}$，其表示给定序列$x$，而$y$序列的前$i$项与给定$y$序列一致对应的概率：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_11.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>也可表示成</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_14.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p><strong>后向向量</strong></p>
+<p>对于每个位置$i=0,1,..,n+1$，定义前向向量$\beta_i(x)_{m\times 1}$，其表示给定序列$x$，而$y$序列的从$i+1$到$n+1$项与给定$y$序列一致对应的概率：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_12.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>也可表示为：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_15.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>由前向向量以及后向向量可以得到：$$Z(x)=\alpha_n^T(x).\bf1_{m\times 1}=\bf1_{m\times 1}^T.\beta_1(x)$$</p>
+<p><strong>概率计算</strong></p>
+<p>与HMM模型一样，已知前向-后向向量的定义，很容易计算标记序列在位置$i$是标记$y_i$的条件概率，以及在位置$i-1$与$i$是标记$y_{i-1}$和$y_i$的条件概率：$$P(y_i=Y_i|x)=\frac{\alpha_i^T(y_i=Y_i|x)\beta_i(y_i=Y_i|x)}{Z(x)}$$，<br>$$P(y_i=Y_i,y_{i-1}=Y_{i-1}|x)=\frac{\alpha_{i-1}^T(y_{i-1}=Y_{i-1}|x)M_i(y_{I-1}=Y_{i-1},y_i=Y_i|x)\beta_i(y_i=Y_i|x)}{Z(x)}$$</p>
+<h2 id="2-6、条件随机场的预测问题"><a href="#2-6、条件随机场的预测问题" class="headerlink" title="2.6、条件随机场的预测问题"></a>2.6、条件随机场的预测问题</h2><p>与HMM的预测问题一样，条件随机场的预测问题也用Viterbi(维特比)算法，进行推测，其原理如下图所示。每次</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="../img/Chinese-Word-Segmentation_2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<center>https://www.cnblogs.com/tornadomeet/archive/2012/03/24/2415889.html</center>
+
+
+
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a href="http://flexcrfs.sourceforge.net/flexcrfs.pdf" target="_blank" rel="noopener">http://flexcrfs.sourceforge.net/flexcrfs.pdf</a> (flexcrfs是Python版本的开源包，该文档是其使用手册，本文引用了手册中的Train部分，即损失函数以及梯度计算。</li>
+<li><a href="http://www.hankcs.com/ml/l-bfgs.html" target="_blank" rel="noopener">L-BFGS优化方法介绍</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-05-26T03:20:45.560Z" itemprop="dateUpdated">2019-05-26 11:20:45</time>
+</span><br>
+
+
+        
+        勿忘初心，方得始终
+        
+    </div>
+    
+    <footer>
+        <a href="http://victorjiangxin.github.io">
+            <img src="/img/jiangxin.jpg" alt="JiangXin">
+            JiangXin
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linear-CRF/">Linear CRF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/中文分词/">中文分词</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/&title=《基于Linear-CRF(线性条件随机场)的中文分词》 — Jiangxin's Blog&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/&title=《基于Linear-CRF(线性条件随机场)的中文分词》 — Jiangxin's Blog&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/Chinese-Word-Segmentation/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于Linear-CRF(线性条件随机场)的中文分词》 — Jiangxin's Blog&url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/google6898ca86f9015df2/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">[no title]</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/Python-note/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Python_note</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+    <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			id: '基于Linear-CRF(线性条件随机场)的中文分词',
+            owner: 'VictorJiangXin',
+            repo: 'VictorJiangXin.github.io',
+            oauth: {
+                client_id: '8e74c41139bddec275e5',
+                client_secret: '227f869423c5e8e3cfa929127ff09020e3c9a3f5',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>JiangXin &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/&title=《基于Linear-CRF(线性条件随机场)的中文分词》 — Jiangxin's Blog&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/&title=《基于Linear-CRF(线性条件随机场)的中文分词》 — Jiangxin's Blog&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/Chinese-Word-Segmentation/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于Linear-CRF(线性条件随机场)的中文分词》 — Jiangxin's Blog&url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/Chinese-Word-Segmentation/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLUlEQVR42u3aQXLjQAgF0Nz/0poDuKR8QM6U0OuVK3LJ/XpBgObnJ17Hx/p8+vnNz6fXbzt7/20LAwPjsYzjcuXfuX7z9UbP2IXfxcDAeAHjbBPVkDoPo9fB+vTvGBgYGIPPk6cYGBgYc8ZdsP8ccDEwMB7CSIrYvN9V7Yb9aS2OgYHxQMaksPz256/cb2BgYDyKcRRXr91fvc4s7woDA2M1Y572Jeng9XaTYY5oPxgYGKsZ1VGtewvOPBwnrToMDIytjMnYVn4Ek6fR1QIGBsZqRlJSzhPByRua3UEMDIx1jHvTwfmwRX4VioGBsZuRt/vzEBmNcMUXDIVpEQwMjKWMakpX3dwkWbytFsfAwHg4I2/c5z9TLVyTAP3Lr2NgYKxm9JpxvTRu3vSvDmRgYGDsYFQvF6thd3405f8bGBgYqxnREEPQaEsGNaolcbOIxcDAWMHItzW5HvibwI2BgbGVcQSryq4eTZVxGmQxMDCWMnoBNx+qmKeY5SPGwMBYysgvCHsJ3CRxLBwcBgbGaxhJs2yS9lXB5TwXAwPjNYzqyFf+w0npm3fVMDAw3sA4iuv61b2CNh//Oj0CDAyM1YxesKuWoNWA20tAMTAwdjOSINvbXF6+VgNueeQCAwNjBaMX+PKrhfyY8itPDAwMjPzqsdzhi4M1BgYGxjeKyV6Q7Q1k/DIzgoGBsY6Rj2clAxOTLSbJIgYGxtsYvdJxnvZNhi2aF5kYGBjPY/wDbC/6CFV3u/oAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jiangxin's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jiangxin's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+</body>
+</html>
