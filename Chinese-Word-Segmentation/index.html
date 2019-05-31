@@ -44,7 +44,7 @@
 <meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_2.png">
 <meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_16.png">
 <meta property="og:image" content="http://victorjiangxin.github.io/img/Chinese-Word-Segmentation_17.png">
-<meta property="og:updated_time" content="2019-05-30T12:27:55.154Z">
+<meta property="og:updated_time" content="2019-05-31T06:33:58.604Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于Linear-CRF(线性条件随机场)的中文分词">
 <meta name="twitter:description" content="[TOC] 1、Motivation研一下选修了宗成庆老师的「自然语言处理」，课程要求完成一系列的大作业，然而已是拖延症晚期的我，一直将其晾在一边，直到今天，才真正开始启动项目。由于实验室资源匮乏，没有GPU，因此只能选择使用传统方法的大作业，最终确定中文分词实验。 话不多说，先看前言论文，看看当前中文分词的前沿水平。">
@@ -398,7 +398,7 @@
                 <div class="image-caption"></div>
             </figure>
 
-<p>其中$C_k(s_i,o_i)$表示的是语料集中，位置k对应的特征矩阵。就是前面所说的$[1,0,0,1]$这样的。而对于中间等式，由于我们特征函数$C_k(s,o)$是要考虑前后两个$y$的值，因此中间等式等价于$\sum_{j=1}^N{P(y_{i-1},y_i|x)\times F_i(x, y)}$，具体的符号表示可以看概率计算以及定义那里。</p>
+<p>其中$C_k(s_i,o_i)$表示的是语料集中，特征k的计数。就是前面所说的$[1,0,0,1]$这样的。而对于中间等式，由于我们特征函数$C_k(s,o)$是要考虑前后两个$y$的值，因此中间等式等价于$\sum_{j=1}^N{P(y_{i-1},y_i|x)\times F_i(x, y)}$，具体的符号表示可以看概率计算以及定义那里。</p>
 <p>P.S CRF的训练，要求使得对数似然函数最大化！！！不是最小化，如果使用最小化策略去优化，一定要对他们取反。</p>
 <h1 id="3、基于线性链条件随机场的中文分词"><a href="#3、基于线性链条件随机场的中文分词" class="headerlink" title="3、基于线性链条件随机场的中文分词"></a>3、基于线性链条件随机场的中文分词</h1><p>在理解完成上述CRF各个公式的含义及概念后，则问题就变得简单了，就是按照上述提供的公式，将其计算出来。</p>
 <h2 id="3-1、中文分词特征是什么？"><a href="#3-1、中文分词特征是什么？" class="headerlink" title="3.1、中文分词特征是什么？"></a>3.1、中文分词特征是什么？</h2><p>条件随机场中特征一般分为两种，一种是U特征，也就是状态特征；另一种是B特征，也就是转移特征。U特征常常表示为(U, pos_shif, y,x,index, word)，其一般为：</p>
@@ -428,7 +428,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-05-30T12:27:55.154Z" itemprop="dateUpdated">2019-05-30 20:27:55</time>
+    最后更新时间：<time datetime="2019-05-31T06:33:58.604Z" itemprop="dateUpdated">2019-05-31 14:33:58</time>
 </span><br>
 
 
