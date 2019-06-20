@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>go语言学习 | Jiangxin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="go">
+    <meta name="description" content="Go语言优点 快速编译，高效执行，易于开发 对网络通信、并发和并行编程的极佳支持 Go 语言像其它静态语言一样执行本地代码，但它依旧运行在某种意义上的虚拟机，以此来实现高效快速的垃圾回收 能够轻松对第三方包进行部署，并且支持调用C语言编写的库  P.S:GO语言的实时性不高！C语言的实时性高 看懂GO代码-简单知识点函数启动点一般会先执行main.mian()也就是main包中的main函数，如果">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言学习">
+<meta property="og:url" content="http://victorjiangxin.github.io/golang-note/index.html">
+<meta property="og:site_name" content="Jiangxin&#39;s Blog">
+<meta property="og:description" content="Go语言优点 快速编译，高效执行，易于开发 对网络通信、并发和并行编程的极佳支持 Go 语言像其它静态语言一样执行本地代码，但它依旧运行在某种意义上的虚拟机，以此来实现高效快速的垃圾回收 能够轻松对第三方包进行部署，并且支持调用C语言编写的库  P.S:GO语言的实时性不高！C语言的实时性高 看懂GO代码-简单知识点函数启动点一般会先执行main.mian()也就是main包中的main函数，如果">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-12T12:18:11.167Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="go语言学习">
+<meta name="twitter:description" content="Go语言优点 快速编译，高效执行，易于开发 对网络通信、并发和并行编程的极佳支持 Go 语言像其它静态语言一样执行本地代码，但它依旧运行在某种意义上的虚拟机，以此来实现高效快速的垃圾回收 能够轻松对第三方包进行部署，并且支持调用C语言编写的库  P.S:GO语言的实时性不高！C语言的实时性高 看懂GO代码-简单知识点函数启动点一般会先执行main.mian()也就是main包中的main函数，如果">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jiangxin&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/panda.jpg">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/panda.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/jiangxin.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">JiangXin</h5>
+          <a href="mailto:jiangxin.hust@foxmail.com" title="jiangxin.hust@foxmail.com" class="mail">jiangxin.hust@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                存档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                种类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/VictorJiangXin" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">go语言学习</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">go语言学习</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-06-12T10:48:00.000Z" itemprop="datePublished" class="page-time">
+  2019-06-12
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/笔记/">笔记</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Go语言优点"><span class="post-toc-number">1.</span> <span class="post-toc-text">Go语言优点</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#看懂GO代码-简单知识点"><span class="post-toc-number">2.</span> <span class="post-toc-text">看懂GO代码-简单知识点</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#函数启动点"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">函数启动点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#变量"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">变量</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#函数形式"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">函数形式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#类型"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">类型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#类型转换"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">类型转换</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简单示例"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">简单示例</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Reference"><span class="post-toc-number">3.</span> <span class="post-toc-text">Reference</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="article-golang-note" class="post-article article-type-article fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">go语言学习</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-06-12 18:48:00" datetime="2019-06-12T10:48:00.000Z" itemprop="datePublished">2019-06-12</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/笔记/">笔记</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="Go语言优点"><a href="#Go语言优点" class="headerlink" title="Go语言优点"></a>Go语言优点</h1><ol>
+<li>快速编译，高效执行，易于开发</li>
+<li>对网络通信、并发和并行编程的极佳支持</li>
+<li>Go 语言像其它静态语言一样执行本地代码，但它依旧运行在某种意义上的虚拟机，以此来实现高效快速的垃圾回收</li>
+<li>能够轻松对第三方包进行部署，并且支持调用C语言编写的库</li>
+</ol>
+<p><strong>P.S:GO语言的实时性不高！C语言的实时性高</strong></p>
+<h1 id="看懂GO代码-简单知识点"><a href="#看懂GO代码-简单知识点" class="headerlink" title="看懂GO代码-简单知识点"></a>看懂GO代码-简单知识点</h1><h2 id="函数启动点"><a href="#函数启动点" class="headerlink" title="函数启动点"></a>函数启动点</h2><p>一般会先执行<code>main.mian()</code>也就是<code>main</code>包中的<code>main</code>函数，如果文件中有<code>init()</code>函数，则会先执行<code>init()</code>函数。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p><strong>声明</strong>:<code>var name type</code></p>
+<p><strong>GO可以自动推导类型</strong>: <code>var a = false</code></p>
+<p><strong>局部变量</strong>： <code>a := 1</code></p>
+<h2 id="函数形式"><a href="#函数形式" class="headerlink" title="函数形式"></a>函数形式</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">functionName</span><span class="params">(parameter_list)</span> <span class="params">(return_value_list)</span></span>&#123; </span><br><span class="line">&#125;</span><br><span class="line">parameter_list: (param1 type1, param2 type2, ...)</span><br><span class="line">return_value_list: (ret1 type1, ret2 type2)</span><br></pre></td></tr></table></figure>
+
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><ul>
+<li>基本类型：<code>int</code>、<code>float</code>、<code>bool</code>、<code>string</code></li>
+<li>结构化类型：<code>struct</code>、<code>array</code>、<code>slice</code>、<code>map</code>、<code>channel</code></li>
+<li>只描述类型行为：<code>interface</code></li>
+</ul>
+<p><strong>自定义类型</strong>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">type IZ int</span><br><span class="line">var a IZ = 5</span><br></pre></td></tr></table></figure>
+
+<p><strong>这里并不是真正意义上的别名，因为使用这种方法定义之后的类型可以拥有更多的特性，且在类型转换时必须显式转换。</strong></p>
+<h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><p><strong>Go不支持隐式转换，只支持显式转换！</strong></p>
+<h2 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">   <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> c = <span class="string">"C"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> v <span class="keyword">int</span> = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> T <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123; <span class="comment">// initialization of package</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> a <span class="keyword">int</span></span><br><span class="line">   Func1()</span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">   fmt.Println(a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Method1</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">//...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Func1</span><span class="params">()</span></span> &#123; <span class="comment">// exported function Func1</span></span><br><span class="line">   <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li><a href="https://github.com/yangwenmai/learning-golang" target="_blank" rel="noopener">https://github.com/yangwenmai/learning-golang</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-06-12T12:18:11.167Z" itemprop="dateUpdated">2019-06-12 20:18:11</time>
+</span><br>
+
+
+        
+        勿忘初心，方得始终
+        
+    </div>
+    
+    <footer>
+        <a href="http://victorjiangxin.github.io">
+            <img src="/img/jiangxin.jpg" alt="JiangXin">
+            JiangXin
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/golang-note/&title=《go语言学习》 — Jiangxin's Blog&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/golang-note/&title=《go语言学习》 — Jiangxin's Blog&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/golang-note/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《go语言学习》 — Jiangxin's Blog&url=http://victorjiangxin.github.io/golang-note/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/golang-note/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/Chinese-Word-Segmentation/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">基于Linear-CRF(线性条件随机场)的中文分词</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+    <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			id: 'go语言学习',
+            owner: 'VictorJiangXin',
+            repo: 'VictorJiangXin.github.io',
+            oauth: {
+                client_id: '8e74c41139bddec275e5',
+                client_secret: '227f869423c5e8e3cfa929127ff09020e3c9a3f5',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>JiangXin &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/golang-note/&title=《go语言学习》 — Jiangxin's Blog&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/golang-note/&title=《go语言学习》 — Jiangxin's Blog&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/golang-note/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《go语言学习》 — Jiangxin's Blog&url=http://victorjiangxin.github.io/golang-note/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/golang-note/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aQZLCMAwEQP7/afYBVJIZOWwVTudEQYLdHIRk6fWKr/fB9XnP0f1H95zff/OFgYHxs4z36fW55NGz5++3P0G+NwwMjOcwjrbYBsc8aLakiz1jYGBgnH71eZhO3s/XwsDAwMiL0lm4bNNQDAwMjParzxO+WcqYr3tbLY6BgfGDjPzU/f9ff6W/gYGB8VOMd3m11Fn5Wu8KAwNja8Z6YXmOzAFJ0XtRymJgYGzNWB+baBdbaV5e8DAwMLZm5AFuBm7bn3mbAQMD4wmMdtN526AtjG84dMPAwNiU0aZiK03EvNwdro6BgbEdY2UAon293mBYOmLDwMDYjjFLGZOEctbsvAjNGBgYj2G0R/+zIrYdqohSTAwMjK0ZRfoVHM2vsNvBCwwMjKcxZmXkDYf4o7WKFTEwMLZg5OlXG2pnwxl5EwIDA+M5jHwwYpYmnq9yb3MUAwNjV0bbaMyD5uyediwDAwPjCYw8RftGmJ4dqC0Nh2FgYGzByEltUZo/NUtGMTAwnsBYWThvZ+ZDYHW6iYGBsTWjbUO2iWDbMGhXx8DA2JvxLq9Z+brewrz4G8DAwNiacVu0XihQ88Q0GRfDwMDYldEWmfky+YBFG3Drfw8MDIwtGPm0Vb7p/FitLaGLDzAwMB7PaJ9NjvvbHw4DAwNjlszlBe1wtGI94GJgYPwgY2UYIgEkAxMrz2JgYOzNaEvHdvzrru5EOzqGgYGxBeMP19LMUg1ksFYAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jiangxin's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jiangxin's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+</body>
+</html>
