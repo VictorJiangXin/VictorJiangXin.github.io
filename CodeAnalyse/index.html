@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>基于SOOT框架的JAVA指针分析 | Jiangxin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="SOOT,JAVA,程序分析">
+    <meta name="description" content="概述研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 1234567891011">
+<meta name="keywords" content="SOOT,JAVA,程序分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于SOOT框架的JAVA指针分析">
+<meta property="og:url" content="http://victorjiangxin.github.io/CodeAnalyse/index.html">
+<meta property="og:site_name" content="Jiangxin&#39;s Blog">
+<meta property="og:description" content="概述研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 1234567891011">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-23T15:13:26.287Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于SOOT框架的JAVA指针分析">
+<meta name="twitter:description" content="概述研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 1234567891011">
+    
+        <link rel="alternate" type="application/atom+xml" title="Jiangxin&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/panda.jpg">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/panda.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/jiangxin.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">JiangXin</h5>
+          <a href="mailto:jiangxin.hust@foxmail.com" title="jiangxin.hust@foxmail.com" class="mail">jiangxin.hust@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                存档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                种类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/VictorJiangXin" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于SOOT框架的JAVA指针分析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">基于SOOT框架的JAVA指针分析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-07-19T02:05:49.000Z" itemprop="datePublished" class="page-time">
+  2019-07-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/笔记/">笔记</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.</span> <span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#分析"><span class="post-toc-number">2.</span> <span class="post-toc-text">分析</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#程序实现"><span class="post-toc-number">3.</span> <span class="post-toc-text">程序实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Variable类"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">Variable类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Member类"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">Member类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Analyzer类"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">Analyzer类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Contex类"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">Contex类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MyTransformer类"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">MyTransformer类</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#关于SOOT一些简单使用"><span class="post-toc-number">4.</span> <span class="post-toc-text">关于SOOT一些简单使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何调用soot框架"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">如何调用soot框架</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="article-CodeAnalyse" class="post-article article-type-article fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于SOOT框架的JAVA指针分析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-07-19 10:05:49" datetime="2019-07-19T02:05:49.000Z" itemprop="datePublished">2019-07-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/笔记/">笔记</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。</p>
+<p><strong>需求</strong>  </p>
+<p>利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。  </p>
+<p>输入：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">Benchmark.alloc(<span class="number">1</span>); <span class="comment">//标记分配点</span></span><br><span class="line">A a = <span class="keyword">new</span> A();</span><br><span class="line">Benchmark.alloc(<span class="number">2</span>);</span><br><span class="line">A b = <span class="keyword">new</span> A();</span><br><span class="line">Benchmark.alloc(<span class="number">3</span>);</span><br><span class="line">A c = <span class="keyword">new</span> A();</span><br><span class="line"><span class="keyword">if</span> (args.length&gt;<span class="number">1</span>) a=b;</span><br><span class="line">Benchmark.test(<span class="number">1</span>, a); <span class="comment">//标记测试点编号和被测变量</span></span><br><span class="line">Benchmark.test(<span class="number">2</span>, c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1: 1 2</span><br><span class="line">2: 3</span><br></pre></td></tr></table></figure>
+
+<p>上述需求是这样理解的，<code>alloc(1)</code>表示一开始<code>new A()</code>得到的地址标号为1，同理得到b、c的地址标号。最后输入测试变量，得到<code>a</code>可能在的地址标号。以<code>a</code>分析举例，一开始，<code>A a = new A()</code>，可以确定<code>a</code>变量对应有地址1，然后在<code>if (args.length&gt;1) a=b;</code>语句之后，<code>a</code>还可能有地址2，然后，合并分支，可以得到<code>a</code>可能在的地址为1和2。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>刚开始接触到这个大作业，应该先根据理论知识，确定相应的几个核心问题，然后根据问题，我们逐步提出软件框架，最后设计出整个系统。首先，是核心问题的提出，我们需要思考的问题包括：</p>
+<p><strong>1 指针分析中，半格应该是什么？程序怎样来表示半格？</strong><br><strong>2 JAVA程序中，存在哪几种操作，该操作会影响指针的指向？这些操作，对应的半格操作是什么？</strong><br><strong>3 对于域敏感的指针分析，如何处理域敏感？假设存在类A，其表示为：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">   	B f;</span><br><span class="line">   &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>那么对于两个A变量<code>a</code>和<code>b</code>，赋值操作<code>a=b</code>，那么对于<code>a.f</code>以及<code>b.f</code>。它们是否是相同的。</strong><br><strong>4 程序中，存在条件选择函数，按照程序分析的假设，要认为每条支路都当做一条支路，如何实现分支，半格在其中如何变化，最后如何实现合并？</strong><br><strong>5 程序中，存在函数调用，也就是程序间程序分析，假设存在这样的调用：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fun1 () &#123;</span><br><span class="line">  	<span class="keyword">int</span> a, b;</span><br><span class="line">  	fun2(a, b);</span><br><span class="line">&#125;</span><br><span class="line">fun2 (<span class="keyword">int</span> c, <span class="keyword">int</span> d) &#123;</span><br><span class="line">  	d = c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>如何使得<code>fun1</code>中的<code>a</code>和<code>b</code>参数与<code>fun2</code>中的<code>d</code>和<code>c</code>对应起来。同时，每个函数域中存在很多的同名函数，则如何让他们不会相互影响？</strong></p>
+<h1 id="程序实现"><a href="#程序实现" class="headerlink" title="程序实现"></a>程序实现</h1><p>根据上述问题的分析，我们可以可以慢慢整理出一个框架，具体过程就不再赘叙，我就直接用我接触初步实现的代码框来说明。</p>
+<h2 id="Variable类"><a href="#Variable类" class="headerlink" title="Variable类"></a>Variable类</h2><p>Variable类用于表示半格变量，它需要实现下述功能：</p>
+<ol>
+<li>对于程序中出现的每个变量，都应该有一个对应的Variable对象。</li>
+<li>Variable中需要一个对象，用于存储半格变量，也就是地址标号。以及相应对地址标号的操作，如添加获取等。</li>
+<li>在程序分析时，遇到分支，半格在不同分支会有不同的变化值，然后在分支汇合处进行合并操作。因此，需要为Variable类实现复制操作，在不同分支，都具备单独的半格变量。（因为如果只是=只是引用，并不是复制），注意Member变量的复制，浅复制只是引用！！</li>
+<li>由于我们需要进行域敏感分析，因此需要保存每个对象相应的成员函数。因此，在每个Variable中，还应该具备成员变量，成员变量中包含了成员对应的Variable对象。</li>
+<li>在JAVA中与指针相关的操作，实际上就是赋值操作，我们需要模拟该操作。</li>
+</ol>
+<p>因此，我们可以确定Variable类的简单框架：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Variable</span> </span>&#123;</span><br><span class="line">  Local local; <span class="comment">//程序中对应的变量</span></span><br><span class="line">  Member member;</span><br><span class="line">  Set&lt;Integer&gt; sourceId;</span><br><span class="line"></span><br><span class="line">  <span class="function">Variable <span class="title">copy</span><span class="params">(<span class="keyword">boolean</span> depp)</span></span>; <span class="comment">// deep则对Member变量也进行复制，否则只是复制Member的引用</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">assign</span><span class="params">(Variable <span class="keyword">var</span>)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">addId</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">  <span class="function">Set&lt;Integer&gt; <span class="title">getSourceId</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Member类"><a href="#Member类" class="headerlink" title="Member类"></a>Member类</h2><p>Member类主要用于表示成员变量，用于存储成员变量与Variable对象的映射关系。因此它需要实现下面功能：</p>
+<ol>
+<li>具有一个映射表，能够根据成员变量描述，得到相应的Variable对象。</li>
+<li>由于类包含有映射表，Variable需要实现复制，因此其也要实现复制操作。</li>
+<li>添加映射关系等。</li>
+</ol>
+<p>因此，我们可以确定Member类的简单框架。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Member</span> </span>&#123;</span><br><span class="line">  Value value;</span><br><span class="line">  Map&lt;SootFieldRef, Variable&gt; fieldMap;</span><br><span class="line"></span><br><span class="line">  <span class="function">Member <span class="title">copy</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function">Variable <span class="title">getVariable</span><span class="params">(SootFieldRef sfr)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">addField</span><span class="params">(SootFieldRef sfr, Variable <span class="keyword">var</span>)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Analyzer类"><a href="#Analyzer类" class="headerlink" title="Analyzer类"></a>Analyzer类</h2><p>Analyzer类主要实现指针分析的整体的半格操作。它需要实现下面功能：</p>
+<ol>
+<li>Analyzer系统中只能存在一个。</li>
+<li>需要设置内存位置标号。</li>
+<li>存在一个映射表，通过该表，我们可以找到所有变量对应的半格，也就是Variable对象，然后又因为存在不同分支，因此对于一些变量，其对应有多个半格。同时，需要对这个映射表进行简单的添、查操作。</li>
+<li>需要记录查询的标号以及变量对应关系。</li>
+<li>根据查询的标号以及变量对应关系，将对应变量的所有半格进行合并，得到最终结果。</li>
+</ol>
+<p>因此，我们可以确定Analyzer类的基本框架。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Analyzer</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> allocId;</span><br><span class="line">  Map&lt;Local, Set&lt;Variable&gt;&gt; localMap;</span><br><span class="line">  Map&lt;Integer, Local&gt; queries;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">setId</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">addVar</span><span class="params">(Local local, Variable <span class="keyword">var</span>)</span></span>;</span><br><span class="line">  <span class="function">Set&lt;Variable&gt; <span class="title">getVars</span><span class="params">(Local local)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">addQuery</span><span class="params">(<span class="keyword">int</span> id, Local local)</span></span>;</span><br><span class="line">  <span class="function">String <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Contex类"><a href="#Contex类" class="headerlink" title="Contex类"></a>Contex类</h2><p>在程序运行中，对于选择函数，则会产生分支，对于函数调用，则会进入一个新的运行区域，对于该区域，半格以及变量都会有所不同，因此，我们需要对该种行为进行一个抽象，因此我们抽象一个Contex对象，该对象模拟该种情况。因此该类需要实现下面功能：</p>
+<ol>
+<li>对于每个函数体内，具有独立的变量映射表。</li>
+<li>对于函数调用，需要将调用函数体内的变量与当前函数的参数进行联系。注意，函数调用后，只会影响对象的内部对象的指针指向！！</li>
+<li>对于程序中的分支（If等），其与主分支变量相同，但是需要复制一份，因为在不同分支中具备不同的半格变化表示。</li>
+<li>需要判断是否进入递归函数或者分支循环。</li>
+<li>注意点，创建分支区域与创建函数子区域是不同的。创建一个分支域!!!!需要复制半格，并且是deep复制，因为在分支内，对象及其内部成员都会受到影响。而创建函数子区域，则无需复制操作。在进行函数调用后，需要将参数与上层函数域内变量对应，简单的想，只要将上层对应变量的Variable与该层的Local对应就行了，这样在该域内，对该域的Local操作，然后相应进行半格操作。但是由于函数调用，不会改变对象本身的指针！！！！只能改变对象成员的指针，因此，我们此时与该域对应的参数的Local对应的应该是上层相应变量的Variable的浅复制，这样该域内可以改变对象的成员指针，但是不能改变对象本身指针，举例说明：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class A &#123;</span><br><span class="line">  B o;</span><br><span class="line">  public A() &#123;</span><br><span class="line">    o = new B();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class B &#123;</span><br><span class="line">  public B() &#123;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class MyPointerAnalysis &#123;</span><br><span class="line">  </span><br><span class="line">  static void swap(A a, A b) &#123;</span><br><span class="line">    a.o = b.o;</span><br><span class="line">  &#125;</span><br><span class="line">  public static void main(String[] args) &#123;    </span><br><span class="line">    A a = new A();</span><br><span class="line">    A b = new A();</span><br><span class="line">    System.out.println(&quot;a: &quot; + a.hashCode() + &quot; b: &quot; + b.hashCode());</span><br><span class="line">    System.out.println(&quot;a.o: &quot; + a.o.hashCode() + &quot; b.o: &quot; + b.o.hashCode());</span><br><span class="line">    swap(a, b);</span><br><span class="line">    System.out.println(&quot;a: &quot; + a.hashCode() + &quot; b: &quot; + b.hashCode());</span><br><span class="line">    System.out.println(&quot;a.o: &quot; + a.o.hashCode() + &quot; b.o: &quot; + b.o.hashCode());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序的输出结果是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a: 2018699554 b: 1311053135</span><br><span class="line">a.o: 118352462 b.o: 1550089733</span><br><span class="line">a: 2018699554 b: 1311053135</span><br><span class="line">a.o: 1550089733 b.o: 1550089733</span><br></pre></td></tr></table></figure>
+
+<p>由此可见！<br>因此，我们可以确定Contex类的基本框架：：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Contex</span> </span>&#123;</span><br><span class="line">  Analyzer analyzer;  <span class="comment">// 存在不同的半格分支，需要analyzer保存某个变量的所有半格</span></span><br><span class="line">  String methodSignature; <span class="comment">// 所在的函数体</span></span><br><span class="line">  Contex invokeMethod; <span class="comment">//保存该函数被调用所在的函数体的指正，从而能够将函数参数与上一个函数域对应</span></span><br><span class="line">  List&lt;Value&gt; args,</span><br><span class="line">  Contex preBranch; <span class="comment">// 用于保留分支前的支流指针，比如 存在分支 A-&gt; B, A -&gt; C，那么B,C对应的Contex保留的为A</span></span><br><span class="line">  Map&lt;Local, Variable&gt; localMap; <span class="comment">//在该域内，变量及其对饮的半格</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//创建一个函数调用的新域，</span></span><br><span class="line">  <span class="function">Contex <span class="title">createInvokeContex</span><span class="params">(String methodSignature, List&lt;Value&gt; args, Variable thisVar)</span>；</span></span><br><span class="line"><span class="function">  <span class="comment">//创建一个分支域!!!!需要复制半格，并且是deep复制，因为在分支内，对象及其内部成员都会受到影响</span></span></span><br><span class="line"><span class="function">  Contex <span class="title">createBranchScope</span><span class="params">(String branchSignature)</span>；</span></span><br><span class="line"><span class="function">  <span class="comment">// 将变量与半格对应</span></span></span><br><span class="line"><span class="function">  <span class="keyword">void</span> <span class="title">bindLocalAndVariable</span><span class="params">(Local local, Variable <span class="keyword">var</span>)</span></span>;</span><br><span class="line">  <span class="comment">// 简单来说就是将上层函数域中对应的变量的半格，浅复制一下，与当前域的local进行对应。</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">bindArg</span><span class="params">(Local local, <span class="keyword">int</span> paramIndex)</span></span>;</span><br><span class="line">  <span class="comment">// 对于函数域内，变量的声明对应的Local，建立Variable与其对应</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">bindThis</span><span class="params">(Local local)</span></span>;</span><br><span class="line">  <span class="comment">// 判断是否递归</span></span><br><span class="line">  <span class="function"><span class="keyword">boolean</span> <span class="title">isInRecursion</span><span class="params">(String invokeSignature)</span></span>;</span><br><span class="line">  <span class="comment">// 判断分支是否递归</span></span><br><span class="line">  <span class="function"><span class="keyword">boolean</span> <span class="title">isInBranchChain</span><span class="params">(String branchSignature)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MyTransformer类"><a href="#MyTransformer类" class="headerlink" title="MyTransformer类"></a>MyTransformer类</h2><p>该类主要就是调用SOOT框架，SOOT框架将java文件以及class文件转化为相应的jimple文件，通过调用框架，针对各种情况进行分析，具体要看代码。因此可以得到该类的基本框架为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyTransformer</span> <span class="keyword">extends</span> <span class="title">SceneTransformer</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">internalTransform</span><span class="params">(String arg0, Map&lt;String, String&gt; arg1)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">solveMethod</span><span class="params">(SootMethod method, Contex contex)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">solveBlock</span><span class="params">(Unit u, Contex contex, UnitGraph graph)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">solveUnit</span><span class="params">(Unit u, Contex contex)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="关于SOOT一些简单使用"><a href="#关于SOOT一些简单使用" class="headerlink" title="关于SOOT一些简单使用"></a>关于SOOT一些简单使用</h1><h2 id="如何调用soot框架"><a href="#如何调用soot框架" class="headerlink" title="如何调用soot框架"></a>如何调用soot框架</h2><p><strong>需要导入的包:</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> soot.PackManager;</span><br><span class="line"><span class="keyword">import</span> soot.Transform;</span><br></pre></td></tr></table></figure>
+
+<p><strong>启动使用soot进行程序分析</strong></p>
+<ol>
+<li><p>首先，你要创建一个继承<code>SceneTransformer</code>的类，并重写函数<code>protected void internalTransform(String s, Map&lt;String, String&gt; map)</code>来实现你自己在程序分析中的一些处理。</p>
+</li>
+<li><p>注册重写的<code>Transformer</code>类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PackManager.v().getPack(&quot;wjtp&quot;).add(new Transform(&quot;wjtp.myapp&quot;, new MyTransformer()));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在主函数中，启动soot函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">soot.Main.main(new String[]&#123;</span><br><span class="line">                &quot;-w&quot;,</span><br><span class="line">                &quot;-f&quot;, &quot;J&quot;,</span><br><span class="line">                &quot;-p&quot;, &quot;cg.spark&quot;, &quot;enabled:true&quot;,</span><br><span class="line">                &quot;-p&quot;, &quot;wjtp.myapp&quot;, &quot;enabled:true&quot;,</span><br><span class="line">                &quot;-soot-class-path&quot;, &lt;包含运行时包含soot的jar包路径&gt;,</span><br><span class="line">                &lt;分析的代码的入口类，比如 App.Main&gt;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>** 通过分析图函数，来逐步分析每个节点</p>
+<ol>
+<li><p>导入包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import soot.*;</span><br><span class="line">import soot.jimple.*;</span><br><span class="line">import soot.toolkits.graph.BriefUnitGraph;</span><br><span class="line">import soot.toolkits.graph.UnitGraph;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开始依次执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 获取main函数</span><br><span class="line">SootMethod mainMethod = Scene.v().getMainMethod();</span><br><span class="line">// 获取main函数的函数体</span><br><span class="line">Body body = mainMethod.getActiveBody();</span><br><span class="line">// 基于函数体，创建程序分析图</span><br><span class="line">UnitGraph graph = new BriefUnitGraph(body);</span><br><span class="line">// 获取其头节点</span><br><span class="line">Unit head = graph.getHeads().iterator().next();</span><br><span class="line">// 获取每个节点的后续节点</span><br><span class="line">List&lt;Unit&gt; succs = graph.getSuccsOf(head);</span><br><span class="line">List&lt;Unit&gt; succs = graph.getSuccsOf(u);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一些语句实体的类型及相关操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">IdentityStmt is //定义语句 exp: r0 := @this: test.FieldSensitivity</span><br><span class="line">// 获取语句的两侧操作数或定义字符</span><br><span class="line">Value lop = is.getLeftOp()</span><br><span class="line">Value rop = is.getRightOp()</span><br><span class="line"></span><br><span class="line">ParameterRef pr // 参数定义语句 如： benchmark.objects.A</span><br><span class="line">pr.getIndex()   // 参数在函数调用中的位置</span><br><span class="line"></span><br><span class="line">ThisRef tr // this定义 如： @this: benchmark.objects.B</span><br><span class="line"></span><br><span class="line">AssignStmt as // 赋值语句，如： r4 = $r9</span><br><span class="line"></span><br><span class="line">AnyNewExpr ae // new 语句，如： new benchmark.objects.B</span><br><span class="line">NewArrayExpr // new 数组</span><br><span class="line"></span><br><span class="line">Local // 局部变量，比如： $r3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果要对某个对象的内部值进行赋值或者操作，比如<code>A.name = B.name</code>，相关操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 首先获取FieldRef</span><br><span class="line">FieldRef fr// 该类型用于表示表达式是否是存在域内部操作的，如： r3.&lt;benchmark.objects.A: benchmark.objects.B f&gt;</span><br><span class="line">// 获取纯内部对象类型</span><br><span class="line">SootFieldRef sr = fr.getFieldRef() 如： &lt;benchmark.objects.A: benchmark.objects.B f&gt;</span><br><span class="line">// 获取实际操作的操作</span><br><span class="line">Local rbase = (Local) fr.getBase(); 如 r3</span><br><span class="line"></span><br><span class="line">InstanceFieldRef // 就是实例赋值 r3.&lt;benchmark.objects.A: benchmark.objects.B f&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>函数调用类的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">InvokeStmt // 函数调用的表达式，如： specialinvoke $r9.&lt;benchmark.objects.B: void &lt;init&gt;()&gt;()</span><br><span class="line">InvokeExpr ie // 与上上式类似 如： specialinvoke $r9.&lt;benchmark.objects.B: void &lt;init&gt;()&gt;()</span><br><span class="line"></span><br><span class="line">SootMethod invokeMethod = ie.getMethod(); // 获取调用的函数</span><br><span class="line">String methodSignature = invokeMethod.getSignature(); //获取函数标签</span><br><span class="line">List&lt;Value&gt; invokeArgs = ie.getArgs(); //获取参数</span><br><span class="line"></span><br><span class="line">InstanceInvokeExpr // 实例初始化调用函数，如： specialinvoke r0.&lt;test.FieldSensitivity: void assign(benchmark.objects.A,benchmark.objects.A)&gt;(r2, r3)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-07-23T15:13:26.287Z" itemprop="dateUpdated">2019-07-23 23:13:26</time>
+</span><br>
+
+
+        
+        勿忘初心，方得始终
+        
+    </div>
+    
+    <footer>
+        <a href="http://victorjiangxin.github.io">
+            <img src="/img/jiangxin.jpg" alt="JiangXin">
+            JiangXin
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SOOT/">SOOT</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/程序分析/">程序分析</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/CodeAnalyse/&title=《基于SOOT框架的JAVA指针分析》 — Jiangxin's Blog&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/CodeAnalyse/&title=《基于SOOT框架的JAVA指针分析》 — Jiangxin's Blog&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/CodeAnalyse/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于SOOT框架的JAVA指针分析》 — Jiangxin's Blog&url=http://victorjiangxin.github.io/CodeAnalyse/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/CodeAnalyse/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/golang-note/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">go语言学习</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+    <script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			id: '基于SOOT框架的JAVA指针分析',
+            owner: 'VictorJiangXin',
+            repo: 'VictorJiangXin.github.io',
+            oauth: {
+                client_id: '8e74c41139bddec275e5',
+                client_secret: '227f869423c5e8e3cfa929127ff09020e3c9a3f5',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check" data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>JiangXin &copy; 2018 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://victorjiangxin.github.io/CodeAnalyse/&title=《基于SOOT框架的JAVA指针分析》 — Jiangxin's Blog&pic=http://victorjiangxin.github.io/img/jiangxin.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://victorjiangxin.github.io/CodeAnalyse/&title=《基于SOOT框架的JAVA指针分析》 — Jiangxin's Blog&source=带点小情怀的研究僧" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://victorjiangxin.github.io/CodeAnalyse/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于SOOT框架的JAVA指针分析》 — Jiangxin's Blog&url=http://victorjiangxin.github.io/CodeAnalyse/&via=http://victorjiangxin.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://victorjiangxin.github.io/CodeAnalyse/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aQW7DMAwEwP7/0+kDWju7VFrA0vgUBLLN0YGWSH19xdfr4vo55mr81Zj78R++MDAwHst43V4/X3l17/3/7RTksWFgYJzDuAox/30Pa6cgjw0DAwPjPtxkIZj8n08TBgYGxkqgbTrGwMDAaBnJo2dhzZ7wh3txDAyMBzLyqvv///6T/gYGBsajGK/yygtnK9vXOioMDIytGesby3tkDpi1GTAwMM5hzApqeVJuN7TJArHYkWNgYGzBWCnr5wvEWasgb6NiYGDsykgKW7NNbBviUtENAwNja8Z6K7F9Zb7dzRM9BgbG3oz7h84K9/mRspz6ZsowMDAOYBRl91FqzlsLSRL/ZQwGBsaRjLbc3z6nPUgR1QsxMDA2ZeSD8gJZu1icxYCBgXEao20MJP+0z2+fXL8RAwPjsYxZCaxNx+2Mts1ODAyMExjJxnJlDZan7+F7MTAwDmDMWoz5XfmY9lgGBgbGCYyVZV/SmJy96024V1FhYGAcwGgxK82D9aMb0Y4cAwNjO8Y6aeU4RbIArb8bGBgYGzE+VZjLQ/lUOQ8DA+MExqu88sVc26rM8W/WthgYGNsxPtWYTFJz3gBIQl/6bmBgYDyQ0SbZWcOgLaLVU4CBgXEAYyV1tgvHlS9AdNgCAwMDI7hrVlybJXQMDAyMtgSWF9faQN8kZQwMjAMYsyVdeyxsdmgjKv9hYGBszZgdtpjlujyItoWAgYGxKeMb6fYUGeK959AAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Jiangxin's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Jiangxin's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+</body>
+</html>
