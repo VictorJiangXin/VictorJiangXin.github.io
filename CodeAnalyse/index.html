@@ -21,18 +21,18 @@
     
     
     <meta name="keywords" content="SOOT,JAVA,程序分析">
-    <meta name="description" content="概述研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 1234567891011">
+    <meta name="description" content="概述code研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 123456789">
 <meta name="keywords" content="SOOT,JAVA,程序分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于SOOT框架的JAVA指针分析">
 <meta property="og:url" content="http://victorjiangxin.github.io/CodeAnalyse/index.html">
 <meta property="og:site_name" content="Jiangxin&#39;s Blog">
-<meta property="og:description" content="概述研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 1234567891011">
+<meta property="og:description" content="概述code研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 123456789">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-23T15:13:26.287Z">
+<meta property="og:updated_time" content="2019-07-23T15:18:26.903Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于SOOT框架的JAVA指针分析">
-<meta name="twitter:description" content="概述研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 1234567891011">
+<meta name="twitter:description" content="概述code研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 123456789">
     
         <link rel="alternate" type="application/atom+xml" title="Jiangxin&#39;s Blog" href="/atom.xml">
     
@@ -185,7 +185,7 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。</p>
+            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><a href="https://github.com/VictorJiangXin/JAVA-Pointer-Analyse" target="_blank" rel="noopener">code</a><br>研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。</p>
 <p><strong>需求</strong>  </p>
 <p>利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。  </p>
 <p>输入：</p>
@@ -296,7 +296,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-07-23T15:13:26.287Z" itemprop="dateUpdated">2019-07-23 23:13:26</time>
+    最后更新时间：<time datetime="2019-07-23T15:18:26.903Z" itemprop="dateUpdated">2019-07-23 23:18:26</time>
 </span><br>
 
 
