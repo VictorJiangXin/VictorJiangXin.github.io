@@ -29,7 +29,7 @@
 <meta property="og:site_name" content="Jiangxin&#39;s Blog">
 <meta property="og:description" content="概述code研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 123456789">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-23T15:18:26.903Z">
+<meta property="og:updated_time" content="2019-07-24T02:14:16.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于SOOT框架的JAVA指针分析">
 <meta name="twitter:description" content="概述code研一在国科大暑假小学期，选修了北大熊英飞和张路老师的《程序分析》，上课期间，很多时候都是云里雾里。课程结束后，留有一个大作业「实现一个JAVA上的指针分析系统」。花了几天时间，终于将其搞定，于是决定当一个“事后诸葛亮”，整理下大作业实现的思路，简单系统的讲述下如何完成这个系统。 需求   利用开源框架，如SOOT程序分析框架，对JAVA程序进行指针分析。   输入： 123456789">
@@ -203,7 +203,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fun1 () &#123;</span><br><span class="line">  	<span class="keyword">int</span> a, b;</span><br><span class="line">  	fun2(a, b);</span><br><span class="line">&#125;</span><br><span class="line">fun2 (<span class="keyword">int</span> c, <span class="keyword">int</span> d) &#123;</span><br><span class="line">  	d = c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>如何使得<code>fun1</code>中的<code>a</code>和<code>b</code>参数与<code>fun2</code>中的<code>d</code>和<code>c</code>对应起来。同时，每个函数域中存在很多的同名函数，则如何让他们不会相互影响？</strong></p>
-<h1 id="程序实现"><a href="#程序实现" class="headerlink" title="程序实现"></a>程序实现</h1><p>根据上述问题的分析，我们可以可以慢慢整理出一个框架，具体过程就不再赘叙，我就直接用我接触初步实现的代码框来说明。</p>
+<h1 id="程序实现"><a href="#程序实现" class="headerlink" title="程序实现"></a>程序实现</h1><p>根据上述问题的分析，我们可以可以慢慢整理出一个框架，具体过程就不再赘叙，我就直接用另一个大佬实现的，我稍微修改的程序框架来进行说明。</p>
 <h2 id="Variable类"><a href="#Variable类" class="headerlink" title="Variable类"></a>Variable类</h2><p>Variable类用于表示半格变量，它需要实现下述功能：</p>
 <ol>
 <li>对于程序中出现的每个变量，都应该有一个对应的Variable对象。</li>
@@ -296,7 +296,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-07-23T15:18:26.903Z" itemprop="dateUpdated">2019-07-23 23:18:26</time>
+    最后更新时间：<time datetime="2019-07-24T02:14:16.423Z" itemprop="dateUpdated">2019-07-24 10:14:16</time>
 </span><br>
 
 
